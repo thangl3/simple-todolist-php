@@ -1,0 +1,31 @@
+{
+    "name": "thangl3/simple-todolist-php",
+    "description": "A simple to do list made with PHP",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "thangl3",
+            "email": "lethethangdn@gmail.com"
+        }
+    ],
+    "require": {
+        "psr/http-message": "^1.0",
+        "psr/container": "^1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "7",
+        "symfony/var-dumper": "^4.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Helper\\": "helper",
+            "App\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Test\\": "test"
+        }
+    }
+}
