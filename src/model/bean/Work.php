@@ -5,51 +5,80 @@ class Work
 {
 	private $workId;
     private $workName;
-    private $startDate;
-    private $endDate;
+    private $startDay;
+    private $startMonth;
+    private $startYear;
+    private $endDay;
+    private $endMonth;
+    private $endYear;
     private $status;
     private $createdAt;
     private $updatedAt;
     private $deletedAt;
+    private $startDate;
+    private $endDate;
 
     /**
      * Receive an array and parse it to each data for each property.
-     * Support camelCase and snake_case
      *
      * @param array $data
      */
-    public function __construct(array $data)
+    public function __construct(array $data = [])
     {
-        if (isset($data['work_id'])                 || isset($data['workId'])) {
-            $this->workId = $data['work_id']        ?? $data['workId'];
+        if (isset($data['work_id'])) {
+            $this->workId = $data['work_id'];
         }
 
-        if (isset($data['work_name'])               || isset($data['workName'])) {
-            $this->workName = $data['work_name']    ?? $data['workName'];
+        if (isset($data['work_name'])) {
+            $this->workName = $data['work_name'];
         }
 
-        if (isset($data['start_date'])              || isset($data['startDate'])) {
-            $this->startDate = $data['start_date']  ?? $data['startDate'];
+        if (isset($data['start_day'])) {
+            $this->startDay = $data['start_day'];
         }
 
-        if (isset($data['end_date'])                || isset($data['endDate'])) {
-            $this->endDate = $data['end_date']      ?? $data['endDate'];
+        if (isset($data['start_month'])) {
+            $this->startMonth = $data['start_month'];
+        }
+
+        if (isset($data['start_year'])) {
+            $this->startYear = $data['start_year'];
+        }
+
+        if (isset($data['end_day'])) {
+            $this->endDay = $data['end_day'];
+        }
+
+        if (isset($data['end_month'])) {
+            $this->endMonth = $data['end_month'];
+        }
+
+        if (isset($data['end_year'])) {
+            $this->endYear = $data['end_year'];
+        }
+
+        if (isset($data['start_date'])) {
+            $this->startDate = $data['start_date'];
+        }
+
+        if (isset($data['end_date'])) {
+            $this->endDate = $data['end_date'];
         }
 
         if (isset($data['status'])) {
             $this->status = $data['status'];
         }
 
-        if (isset($data['created_at'])              || isset($data['createdAt'])) {
-            $this->createdAt = $data['created_at']  ?? $data['createdAt'];
+        if (isset($data['created_at'])) {
+            $this->createdAt = $data['created_at'];
         }
 
-        if (isset($data['updated_at'])              || isset($data['updatedAt'])) {
-            $this->updatedAt = $data['updated_at']  ?? $data['updatedAt'];
+        if (isset($data['updated_at'])) {
+            $this->updatedAt = $data['updated_at'];
         }
 
-        if (isset($data['deleted_at'])              || isset($data['deletedAt'])) {
-            $this->deletedAt = $data['deleted_at']  ?? $data['deletedAt'];
+        if (isset($data['deleted_at'])) {
+            $this->deletedAt = $data['deleted_at'];
         }
 	}
 

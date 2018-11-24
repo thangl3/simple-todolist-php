@@ -40,14 +40,17 @@ class WorkTable extends AbstractMigration
             ]
         );
         $table
-            ->addColumn('work_id', 'integer', ['limit' => 9])
-            ->addColumn('work_name', 'string', ['limit' => 1000])
-            ->addColumn('start_date', 'datetime')
-            ->addColumn('end_date', 'datetime')
-            ->addColumn('status', 'integer', ['limit' => 1, 'default' => 1])
-            ->addColumn('created_at', 'datetime')
-            ->addColumn('updated_at', 'datetime')
-            ->addColumn('deleted_at', 'datetime')
+            ->addColumn('work_name',    'string',   ['limit' => 300])
+            ->addColumn('start_day',    'integer',  ['limit' => 2])
+            ->addColumn('start_month',  'integer',  ['limit' => 2])
+            ->addColumn('start_year',   'integer',  ['limit' => 4])
+            ->addColumn('end_day',      'integer',  ['limit' => 2])
+            ->addColumn('end_month',    'integer',  ['limit' => 2])
+            ->addColumn('end_year',     'integer',  ['limit' => 4])
+            ->addColumn('status',       'integer',  ['limit' => 1, 'default' => 1])
+            ->addColumn('created_at',   'datetime', ['default' => 'CURRENT_TIMESTAMP'])
+            ->addColumn('updated_at',   'datetime')
+            ->addColumn('deleted_at',   'datetime')
             ->create();
     }
 }
