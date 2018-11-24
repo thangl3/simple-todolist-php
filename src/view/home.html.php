@@ -10,10 +10,24 @@
         crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU"
         crossorigin="anonymous">
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
 </head>
 <style>
-    .table td {
-        padding: 0.75rem 0.5rem;
+    /* .table td {
+        padding: .75rem 0.3rem;
+    } */
+    td a {
+        margin-right: 0.2rem;
+    }
+    td a:last-child {
+        margin-right: unset;
+    }
+    .option {
+        text-align: right;
+    }
+    .task-row {
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
     }
 </style>
 <body>
@@ -53,35 +67,40 @@
             <?php } ?>
 
             <div class="col-12">
-                <table class="table">
+                <table class="table" id="tasks">
                     <thead class="thead-dark">
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Task name</th>
-                            <th scope="col">Start date</th>
-                            <th scope="col">End date</th>
-                            <th scope="col" class="text-center" colspan="3">#</th>
+                            <th scope="col">Task_name</th>
+                            <th scope="col">Starting_date</th>
+                            <th scope="col">Ending_date</th>
+                            <th scope="col">Status</th>
+                            <th scope="col" class="text-center">_Options_</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach($works as $key => $work) { ?>
-                        <tr>
-                            <th scope="row"><?= $work->workId ?></th>
+                        <tr class="task-row">
+                            <th scope="row"><?= ($key + 1) ?></th>
                             <td><?= $work->workName ?></td>
                             <td><?= $work->startDate ?></td>
                             <td><?= $work->endDate ?></td>
-                            <td>
-                                <a href="/edit?id=<?= $work->workId ?>">
+                            <td><?= $status[$work->status] ?></td>
+                            <td class="option">
+                            <?php if ($work->status != 2) { ?>
+                                <a href="/change-status?id=<?= $work->workId ?>&status=2" title="Mark this work is doing">
+                                    <i class="fas fa-tasks"></i>
+                                </a>
+                            <?php }?>
+                            <?php if ($work->status != 3) { ?>
+                                <a href="/change-status?id=<?= $work->workId ?>&status=3" title="Mark this work is complete">
+                                    <i class="far fa-check-circle"></i>
+                                </a>
+                            <?php }?>
+                                <a href="/update?id=<?= $work->workId ?>" title="Update this work">
                                     <i class="far fa-edit"></i>
                                 </a>
-                            </td>
-                            <td>
-                                <a href="/view?id=<?= $work->workId ?>">
-                                    <i class="fas fa-info-circle"></i>
-                                </a>
-                            </td>
-                            <td>
-                                <a href="/delete?id=<?= $work->workId ?>">
+                                <a href="/delete?id=<?= $work->workId ?>" title="Delete this work">
                                     <i class="far fa-trash-alt"></i>
                                 </a>
                             </td>
@@ -100,4 +119,12 @@
     crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
     crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#tasks').DataTable({
+            pageLength: 20
+        });
+    });
+</script>
 </html>

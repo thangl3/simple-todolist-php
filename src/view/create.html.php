@@ -29,33 +29,33 @@
     </nav>
     <div class="container mt-3">
         <div class="row justify-content-md-center">
-            <div class="col-offset-4 col-8">
-                <?php if (isset($sucess)) { ?>
+            <!-- Display error or successfuly message here -->
+            <?php if ($success) { ?>
                 <div class="col-12">
                     <div class="alert alert-success text-center" role="alert">
-                        <?= $sucess ?>
+                        <?= $success ?>
                     </div>
                 </div>
                 <?php } ?>
 
-                <?php if (isset($notify)) { ?>
+                <?php if ($notify) { ?>
                 <div class="col-12">
-                    <div class="alert alert-info text-center" role="alert">
+                    <div class="alert alert-warning text-center" role="alert">
                         <?= $notify ?>
                     </div>
                 </div>
                 <?php } ?>
 
-                <?php if (isset($error)) { ?>
+                <?php if ($error) { ?>
                 <div class="col-12">
-                    <div class="alert alert-warning text-center" role="alert">
+                    <div class="alert alert-danger text-center" role="alert">
                         <?= $error ?>
                     </div>
                 </div>
-                <?php } ?>
-            </div>
+            <?php } ?>
+
             <div class="col-offset-4 col-8">
-                <form>
+                <form action="/create" method="POST">
                     <div class="form-group">
                         <label for="workNameInput">Work name</label>
                         <input type="text" class="form-control" id="workNameInput" name="workName" placeholder="Enter name of work" require>
@@ -68,6 +68,7 @@
                         <label for="endDateInput">End date</label>
                         <input type="date" class="form-control" id="endDateInput" name="endDate" require>
                     </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
             </div>
         </div>

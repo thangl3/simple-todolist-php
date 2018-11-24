@@ -29,53 +29,56 @@
     </nav>
     <div class="container mt-3">
         <div class="row justify-content-md-center">
-            <div class="col-offset-4 col-8">
-                <?php if (isset($sucess)) { ?>
+            <!-- Display error or successfuly message here -->
+            <?php if ($success) { ?>
                 <div class="col-12">
                     <div class="alert alert-success text-center" role="alert">
-                        <?= $sucess ?>
+                        <?= $success ?>
                     </div>
                 </div>
                 <?php } ?>
 
-                <?php if (isset($notify)) { ?>
+                <?php if ($notify) { ?>
                 <div class="col-12">
-                    <div class="alert alert-info text-center" role="alert">
+                    <div class="alert alert-warning text-center" role="alert">
                         <?= $notify ?>
                     </div>
                 </div>
                 <?php } ?>
 
-                <?php if (isset($error)) { ?>
+                <?php if ($error) { ?>
                 <div class="col-12">
-                    <div class="alert alert-warning text-center" role="alert">
+                    <div class="alert alert-danger text-center" role="alert">
                         <?= $error ?>
                     </div>
                 </div>
-                <?php } ?>
-            </div>
+            <?php } ?>
             <div class="col-offset-4 col-8">
-                <form>
+                <form action="/update" method="POST">
+                    <input type="hidden" name="id" value="<?= $work->workId ?>">
                     <div class="form-group">
                         <label for="workNameInput">Work name</label>
-                        <input type="text" class="form-control" id="workNameInput" name="workName" placeholder="Enter name of work">
+                        <input type="text" class="form-control" id="workNameInput" name="workName"
+                            value="<?= $work->workName ?>" />
                     </div>
                     <div class="form-group">
                         <label for="startDateInput">Start date</label>
-                        <input type="date" class="form-control" id="startDateInput" name="startDate">
+                        <input type="date" class="form-control" id="startDateInput" name="startDate" value="<?= $work->startDate ?>" />
                     </div>
                     <div class="form-group">
                         <label for="endDateInput">End date</label>
-                        <input type="date" class="form-control" id="endDateInput" name="endDate">
+                        <input type="date" class="form-control" id="endDateInput" name="endDate" value="<?= $work->endDate ?>" />
                     </div>
                     <div class="form-group">
                         <label for="statusSelect">Status</label>
-                        <select class="form-control" id="statusSelect" name="status">
-                            <option value="1">Planning</option>
-                            <option value="2">Doing</option>
-                            <option value="3">Complete</option>
+                        <select class="form-control" id="statusSelect" name="status" value="<?= $work->status ?>">
+                            <?php foreach ($status as $key => $value) { ?>
+                            <option value="<?= $key ?>" <?= $work->status == $key ? 'selected' : '' ?>>
+                                <?= $value ?></option>
+                            <?php } ?>
                         </select>
                     </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
             </div>
         </div>
