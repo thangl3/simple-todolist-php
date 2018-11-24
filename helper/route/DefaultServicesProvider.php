@@ -47,11 +47,11 @@ class DefaultServicesProvider
         }
 
         if (!isset($container['exceptionHandler'])) {
+            // Closure recieved all exception of app
             $container['exceptionHandler'] = function ($container) {
-                $response = $container['response'];
-                $response->setOutput('has exceptionHandler');
-
-                return $response;
+                return function($error, $request, $response) {
+                    return $response->write($error);
+                };
             };
         }
     }

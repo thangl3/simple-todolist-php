@@ -21,7 +21,6 @@ class Response implements ResponseInterface
             // throw $ex;
         } finally {
             echo ob_get_clean();
-            ob_end_flush();
         }
 
         return $this;
@@ -35,5 +34,20 @@ class Response implements ResponseInterface
     public function getOutput()
     {
         return $this->output;
+    }
+
+    public function redirectTo(string $pathTo, int $statusCode = 301)
+    {
+        header('Location: ' .$pathTo, true, $statusCode);
+
+        return $this;
+    }
+
+    public function withJson(string $json)
+    {
+        header('Content-Type: application/json');
+        $this->setOutput($json);
+
+        return $this;
     }
 }

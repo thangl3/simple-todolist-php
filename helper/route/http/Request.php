@@ -33,6 +33,11 @@ class Request implements RequestInterface
         return $this->method === Method::$GET;
     }
 
+    /**
+     * Get current method in request
+     *
+     * @return string
+     */
     public function getMethod() : string
     {
         return $this->method;
@@ -58,7 +63,13 @@ class Request implements RequestInterface
         return [];
     }
 
-    public function getBodyParam($key) : string
+    /**
+     * Get a parameter from POST
+     *
+     * @param string $key
+     * @return string
+     */
+    public function getBodyParam(string $key) : string
     {
         if ($this->isPost()) {
             if (isset($_POST[$key])) {
@@ -66,7 +77,7 @@ class Request implements RequestInterface
             }
         }
 
-        return null;
+        return '';
     }
 
     /**
@@ -89,7 +100,13 @@ class Request implements RequestInterface
         return [];
     }
 
-    public function getQueryParam($key) : string
+    /**
+     * Get a parameter from GET
+     *
+     * @param string $key
+     * @return string
+     */
+    public function getQueryParam(string $key) : string
     {
         if ($this->isGet()) {
             if (isset($_GET[$key])) {
@@ -97,7 +114,7 @@ class Request implements RequestInterface
             }
         }
 
-        return null;
+        return '';
     }
 
     /**
@@ -110,7 +127,13 @@ class Request implements RequestInterface
         return array_merge($this->getBodyParams(), $this->getQueryParams());
     }
 
-    public function getParam($key) : string
+    /**
+     * Get a parameter in GET and POST method http request
+     *
+     * @param string $key
+     * @return string
+     */
+    public function getParam(string $key) : string
     {
         $params = $this->getParams();
 
@@ -118,7 +141,7 @@ class Request implements RequestInterface
             return $params[$key];
         }
 
-        return null;
+        return '';
     }
 
     /**
