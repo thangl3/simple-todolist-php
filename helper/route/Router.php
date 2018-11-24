@@ -1,6 +1,8 @@
 <?php
 namespace Helper\Route;
 
+use Exception;
+
 class Router
 {
     private $routes = [];
@@ -32,6 +34,6 @@ class Router
             return $this->routes[$method][$pattern];
         }
 
-        return null;
+        throw new Exception('Not found this route');
     }
 }
