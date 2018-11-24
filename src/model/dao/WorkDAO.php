@@ -19,7 +19,7 @@ class WorkDAO
 
     public function has(int $workId) : bool
     {
-        $sql = 'SELECT COUNT(1) FROM work WHERE work_id = :workId';
+        $sql = 'SELECT work_id FROM work WHERE work_id = :workId';
 
         return $this->mapper->has(
             $sql,
@@ -31,7 +31,7 @@ class WorkDAO
 
     public function select(int $workId) : array
     {
-        $sql = 'SELECT work_id, work_name, start_date, end_date, status, created_at
+        $sql = 'SELECT work_id, work_name, start_day, start_month, start_year, end_day, end_month, end_year, status, created_at
                 FROM work
                 WHERE work_id = :workId';
 
@@ -45,8 +45,9 @@ class WorkDAO
 
     public function selectAll() : array
     {
-        $sql = 'SELECT work_id, work_name, start_date, end_date, status, created_at
-                FROM work';
+        $sql = 'SELECT work_id, work_name, start_day, start_month, start_year, end_day, end_month,
+                    end_year, status, created_at
+                FROM work ORDER BY work_id DESC';
 
         return $this->mapper->fetchRows(
             $sql
@@ -56,16 +57,21 @@ class WorkDAO
     public function create(Work $work) : int
     {
          $sql = 'INSERT INTO work
-            (work_name, start_date, end_date)
+            (work_name, start_day, start_month, start_year, end_day, end_month, end_year, status)
             VALUES
-            (:workName, :startDate, :endDate)';
+            (:workName, :startDay, :startMonth, :startYear, :endDay, :endMonth, :endYear, :status)';
 
         return $this->mapper->insert(
             $sql,
             [
                 'workName'  => $work->workName,
-                'startDate' => $work->startDate,
-                'endDate'   => $work->endDate
+                'startDay' => $work->startDay,
+                'startMonth' => $work->startMonth,
+                'startYear' => $work->startYear,
+                'endDay'   => $work->endDay,
+                'endMonth' => $work->endMonth,
+                'endYear' => $work->endYear,
+                'status'    => $work->status,
             ]
         );
     }
@@ -74,8 +80,12 @@ class WorkDAO
     {
         $sql = 'UPDATE work
             SET work_name   = :workName,
-                start_date  = :startDate,
-                end_date    = :endDate,
+                start_day   = :startDay,
+                start_month = :startMonth,
+                start_year  = :startYear,
+                end_day     = :endDay,
+                end_month   = :endMonth,
+                end_year    = :endYear,
                 status      = :status
             WHERE work_id   = :workId';
 
@@ -84,8 +94,12 @@ class WorkDAO
             [
                 'workId'    => $work->workId,
                 'workName'  => $work->workName,
-                'startDate' => $work->startDate,
-                'endDate'   => $work->endDate,
+                'startDay' => $work->startDay,
+                'startMonth' => $work->startMonth,
+                'startYear' => $work->startYear,
+                'endDay'   => $work->endDay,
+                'endMonth' => $work->endMonth,
+                'endYear' => $work->endYear,
                 'status'    => $work->status,
             ]
         );
@@ -94,8 +108,8 @@ class WorkDAO
     public function updateStatus(Work $work) : int
     {
         $sql = 'UPDATE work
-                status      = :status
-            WHERE work_id   = :workId';
+                SET status      = :status
+                WHERE work_id   = :workId';
 
         return $this->mapper->update(
             $sql,

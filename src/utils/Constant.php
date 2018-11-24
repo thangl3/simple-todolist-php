@@ -3,6 +3,7 @@ namespace App\Utils;
 
 class Constant
 {
+    const DATETIME_FORMAT = 'Y-m-d';
     const CREATE_SUCCESS = 'Create a work success!';
     const CREATE_FAIL = 'Create a work fail!';
     const UPDATE_SUCCESS = 'Update the work success!';
@@ -12,4 +13,6 @@ class Constant
     const STATUS_NOT_VALID = 'Status not valid, please try again!';
     const STARTDATE_NOT_VALID = 'Start date not valid, please try again!';
     const ENDDATE_NOT_VALID = 'End date not valid, please try again!';
+    const UPDATE_STATUS_SUCCESS = 'Update status success!';
+    const UPDATE_STATUS_FAIL = 'Update status fail!';
 }

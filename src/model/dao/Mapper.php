@@ -20,7 +20,7 @@ class Mapper
      * @param array $data
      * @return boolean
      */
-    public function has($sql, array $data = [])
+    public function has($sql, array $data = []) : bool
     {
         $stmt = $this->db->prepare($sql);
 
@@ -114,7 +114,8 @@ class Mapper
         $result = $stmt->execute($data);
 
         if(!$result) {
-            throw new Exception("Have problem when running SQL");
+            return -1;
+            // throw new Exception("Have problem when running SQL");
         }
 
         return $result;
