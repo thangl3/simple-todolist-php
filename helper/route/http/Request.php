@@ -33,6 +33,11 @@ class Request implements RequestInterface
         return $this->method === Method::$GET;
     }
 
+    public function getMethod() : string
+    {
+        return $this->method;
+    }
+
     /**
      * Return an array contain all value sent parsed vie method POST
      *
@@ -49,8 +54,19 @@ class Request implements RequestInterface
 
             return $params;
         }
-        
+
         return [];
+    }
+
+    public function getBodyParam($key) : string
+    {
+        if ($this->isPost()) {
+            if (isset($_POST[$key])) {
+                return filter_input(INPUT_POST, $key, FILTER_SANITIZE_SPECIAL_CHARS);
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -73,6 +89,17 @@ class Request implements RequestInterface
         return [];
     }
 
+    public function getQueryParam($key) : string
+    {
+        if ($this->isGet()) {
+            if (isset($_GET[$key])) {
+                return filter_input(INPUT_GET, $key, FILTER_SANITIZE_SPECIAL_CHARS);
+            }
+        }
+
+        return null;
+    }
+
     /**
      * Return an array contain all paramater via GET and POST method
      *
@@ -81,6 +108,17 @@ class Request implements RequestInterface
     public function getParams() : array
     {
         return array_merge($this->getBodyParams(), $this->getQueryParams());
+    }
+
+    public function getParam($key) : string
+    {
+        $params = $this->getParams();
+
+        if (isset($params[$key])) {
+            return $params[$key];
+        }
+
+        return null;
     }
 
     /**
