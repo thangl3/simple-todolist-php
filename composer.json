@@ -13,7 +13,8 @@
     },
     "require-dev": {
         "phpunit/phpunit": "7",
-        "symfony/var-dumper": "^4.1"
+        "symfony/var-dumper": "^4.1",
+        "robmorgan/phinx": "^0.10.6"
     },
     "autoload": {
         "psr-4": {
