@@ -40,12 +40,13 @@ $container['view'] = function($container) {
     return new Helper\View\ViewEngine($container->settings['viewPath']);
 };
 
-$route->get('/',        HomeController::class .'@listWork');
-$route->get('/create',  CreateController::class .'@createWork');
-$route->get('/update',  UpdateController::class .'@updateWork');
-$route->get('/delete',  DeleteController::class .'@deleteWork');
+$route->get('/',                HomeController::class   .'@listWork');
+$route->get('/create',          CreateController::class .'@createWork');
+$route->get('/update',          UpdateController::class .'@updateWork');
+$route->get('/change-status',   UpdateController::class .'@updateStatus');
+$route->get('/delete',          DeleteController::class .'@deleteWork');
 
-$route->post('/create', CreateController::class .'@createWork');
-$route->post('/update', UpdateController::class .'@updateWork');
+$route->post('/create',         CreateController::class .'@createWork');
+$route->post('/update',         UpdateController::class .'@updateWork');
 
 $route->handle();
