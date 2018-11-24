@@ -1,7 +1,11 @@
 <?php
 namespace Helper\Route;
 
+use Exception;
+use Throwable;
 use Helper\Route\Http\Method;
+use Helper\Route\Http\RequestInterface as Request;
+use Helper\Route\Http\ResponseInterface as Response;
 
 class Route
 {
@@ -33,12 +37,40 @@ class Route
     {
         $callableResolved = $this->callableResolver->resolve($callable);
         
-        $router = $this->container->get('router')->addRoute($method, $pattern, $callableResolved);
+        $router = $this->container->router->addRoute($method, $pattern, $callableResolved);
     }
 
     public function handle()
     {
-        dump($this->container->get('request')->getParams());
-        die;
+        $request = $this->container->request;
+        $response = $this->container->response;
+
+        // exception handling
+        try {
+            $method = $request->getMethod();
+            $requestTarget = $request->getRequestTarget();
+
+            $routeCallable = $this->container->router->lookupRoute($method, $requestTarget);
+
+            // call callback of route
+            $response = $routeCallable($request, $response);
+        } catch (Exception $e) {
+            $response = $this->handleException($e, $request, $response);
+        }
+
+        return $response->write($response->getOutput());
+    }
+
+    private function handleException(Exception $error, Request $request, Response $response)
+    {
+        $handler = $this->container->get('exceptionHandler');
+
+        if (is_callable($handler)) {
+            // call the closure if custom has overrided runtimeErrorHandler in default service
+            return call_user_func_array($handler, [$error, $request, $response]);
+        } else {
+            // Call the return of closure had registered in default service
+            return $handler;
+        }
     }
 }

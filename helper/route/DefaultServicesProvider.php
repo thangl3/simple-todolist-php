@@ -45,5 +45,14 @@ class DefaultServicesProvider
                 return new Router($container);
             };
         }
+
+        if (!isset($container['exceptionHandler'])) {
+            $container['exceptionHandler'] = function ($container) {
+                $response = $container['response'];
+                $response->setOutput('has exceptionHandler');
+
+                return $response;
+            };
+        }
     }
 }

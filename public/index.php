@@ -2,14 +2,20 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
+use App\Controller\HomeController;
+use App\Controller\CreateController;
+use App\Controller\UpdateController;
+use App\Controller\DeleteController;
+
 $settings = [
     'db' => [
-        'database' => getenv('DB_NAME'),
-        'host' => getenv('DB_HOST'),
-        'port' => getenv('DB_PORT'),
-        'username' => getenv('DB_USERNAME'),
-        'password' => getenv('DB_PASSWORD')
+        'database' => 'simple_todo',
+        'host' => 'localhost',
+        'port' => 3306,
+        'username' => 'root',
+        'password' => ''
     ],
+    'viewPath' => __DIR__ .'/../src/view'
 ];
 
 $route = new \Helper\Route\Route($settings);
@@ -30,9 +36,16 @@ $container['db'] = function($container) {
     return $pdo;
 };
 
-$route->get('/list', App\Controller\HomeController::class .'@index');
-$route->get('/list2', App\Controller\HomeController::class .'@index');
-$route->get('/list3', App\Controller\HomeController::class .'@index');
-$route->get('/list4', App\Controller\HomeController::class .'@index');
+$container['view'] = function($container) {
+    return new Helper\View\ViewEngine($container->settings['viewPath']);
+};
+
+$route->get('/',        HomeController::class .'@listWork');
+$route->get('/create',  CreateController::class .'@createWork');
+$route->get('/update',  UpdateController::class .'@updateWork');
+$route->get('/delete',  DeleteController::class .'@deleteWork');
+
+$route->post('/create', CreateController::class .'@createWork');
+$route->post('/update', UpdateController::class .'@updateWork');
 
 $route->handle();
