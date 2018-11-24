@@ -17,6 +17,18 @@ class WorkDAO
         $this->mapper = new Mapper($database);
     }
 
+    public function has(int $workId) : bool
+    {
+        $sql = 'SELECT COUNT(1) FROM work WHERE work_id = :workId';
+
+        return $this->mapper->has(
+            $sql,
+            [
+                'workId' => $workId
+            ]
+        );
+    }
+
     public function select(int $workId) : array
     {
         $sql = 'SELECT work_id, work_name, start_date, end_date, status, created_at
@@ -74,6 +86,21 @@ class WorkDAO
                 'workName'  => $work->workName,
                 'startDate' => $work->startDate,
                 'endDate'   => $work->endDate,
+                'status'    => $work->status,
+            ]
+        );
+    }
+
+    public function updateStatus(Work $work) : int
+    {
+        $sql = 'UPDATE work
+                status      = :status
+            WHERE work_id   = :workId';
+
+        return $this->mapper->update(
+            $sql,
+            [
+                'workId'    => $work->workId,
                 'status'    => $work->status,
             ]
         );

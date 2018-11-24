@@ -13,6 +13,11 @@ class WorkBO
         $this->workDao = new WorkDAO($database);
     }
 
+    public function hasWork(int $workId) : bool
+    {
+        return $this->workDao->has($workId);
+    }
+
     /**
      * Fetch one work by id
      *
@@ -64,6 +69,11 @@ class WorkBO
     public function update(array $dataWork) : bool
     {
         return $this->workDao->update(new Work($dataWork)) === 1;
+    }
+
+    public function updateStatus(array $dataWork) : bool
+    {
+        return $this->workDao->updateStatus(new Work($dataWork)) === 1;
     }
 
     /**
