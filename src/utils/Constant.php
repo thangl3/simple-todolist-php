@@ -14,7 +14,8 @@ class Constant
     const ENDDATE_NOT_VALID = 'End date not valid, please try again!';
     const UPDATE_STATUS_SUCCESS = 'Update status success!';
     const UPDATE_STATUS_FAIL = 'Update status fail!';
-    const STARTDATE_BIGGER_THAN_ENDDATE = 'Please choose start date lower than or equal with the end date';
-    const END_DATE_LOWER_THAN_CURRENT = 'Please choose the end date lower or equal with today';
+    const STARTDATE_BIGGER_THAN_ENDDATE = 'Please choose start date LOWER than or equal with the end date';
+    const END_DATE_LOWER_THAN_CURRENT = 'Please choose the end date BIGGER or equal with today';
     const INVALID_WORKNAME = 'Please enter the work name';
+    const INVALID_DATE = 'Your date is wrong format';
 }

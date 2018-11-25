@@ -22,6 +22,15 @@ final class Util
         return [];
     }
 
+    final public static function isWrongDateFormat($datestring) : bool
+    {
+        if (($timestamp = strtotime($datestring)) !== false && date(Constant::DATETIME_FORMAT, $timestamp)) {
+            return false;
+        }
+
+        return true;
+    }
+
     /**
      * Create a date with format has formated before from day, month and year
      *
