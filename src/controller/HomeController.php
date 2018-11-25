@@ -8,6 +8,14 @@ use App\Model\BO\StatusBO;
 
 class HomeController extends Controller
 {
+    /**
+     * Name of function must be mapping with call router
+     * List all works from database to browser
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
     public function listWork(Request $request, Response $response) : Response
     {
         $statusBo = new StatusBO();

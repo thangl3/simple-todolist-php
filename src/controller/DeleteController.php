@@ -3,20 +3,29 @@ namespace App\Controller;
 
 use Helper\Route\Http\RequestInterface as Request;
 use Helper\Route\Http\ResponseInterface as Response;
+use Helper\Route\Exception\NotFoundException;
 use App\Utils\Constant;
 use App\Model\BO\WorkBO;
 
 class DeleteController extends Controller
 {
+    /**
+     * Name of function must be mapping with call router
+     * Controller when delete a work
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
     public function deleteWork(Request $request, Response $response) : Response
     {
-        $workId = (int) $request->getQueryParam('id');
+        $workId = (int) $request->getBodyParam('id');
         $message = null;
 
         $workBo = new WorkBO($this->c->db);
 
         if ($workBo->hasWork($workId)) {
-            $isSuccess = $workBo->delete($workId);
+            $isSuccess = $workBo->deleteWork($workId);
 
             if ($isSuccess) {
                 $message = Constant::DELETE_SUCCESS;
@@ -24,7 +33,7 @@ class DeleteController extends Controller
                 $message = Constant::DELETE_FAIL;
             }
         } else {
-            $message = Constant::DELETE_FAIL;
+            throw new NotFoundException($request, $response);
         }
 
         return $response->withJson(json_encode(['message' => $message]));

@@ -4,6 +4,7 @@ namespace App\Controller;
 use Exception;
 use Helper\Route\Http\RequestInterface as Request;
 use Helper\Route\Http\ResponseInterface as Response;
+use Helper\Route\Exception\NotFoundException;
 use App\Utils\Constant;
 use App\Utils\Util;
 use App\Model\BO\WorkBO;
@@ -13,10 +14,22 @@ class UpdateController extends Controller
 {
     use ValidaterFormTrait;
 
+    /**
+     * Name of function must be mapping with call router
+     * Controller when user access update page and update a work
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
     public function updateWork(Request $request, Response $response) : Response
     {
         $workId = (int) $request->getParam('id');
+
         $workBo = new WorkBO($this->c->db);
+        if (!$workBo->hasWork($workId)) {
+            throw new NotFoundException($request, $response);
+        }
 
         $success = null;
         $error = null;
@@ -24,10 +37,6 @@ class UpdateController extends Controller
         
         // Request with POST method
         if ($request->isPost()) {
-            if (!$workBo->hasWork($workId)) {
-                throw new Exception('Not found');
-            }
-
             $validate = $this->validateForm($request->getBodyParams());
             $notify = $validate['message'];
 
@@ -67,11 +76,19 @@ class UpdateController extends Controller
         );
     }
 
+    /**
+     * Name of function must be mapping with call router
+     * Just update status via XHR
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
     public function updateStatus(Request $request, Response $response) : Response
     {
         $message = null;
-        $workId = $request->getBodyParam('id');
-        $status = $request->getBodyParam('status');
+        $workId = (int) $request->getBodyParam('id');
+        $status = (int) $request->getBodyParam('status');
         $workBo = new WorkBO($this->c->db);
 
         if ($workBo->hasWork($workId)) {
@@ -86,12 +103,18 @@ class UpdateController extends Controller
                 $message = Constant::UPDATE_STATUS_FAIL;
             }
         } else {
-            $message = Constant::UPDATE_STATUS_FAIL;
+            throw new NotFoundException($request, $response);
         }
 
         return $response->withJson(json_encode(['message' => $message]));
     }
 
+    /**
+     * For testing
+     *
+     * @param Request $request
+     * @return void
+     */
     public function mockTestUpdate($request)
     {
         $success = null;
@@ -100,7 +123,7 @@ class UpdateController extends Controller
         $workBo = new WorkBO($this->c->db);
 
         if (!$workBo->hasWork($workId)) {
-            throw new Exception('Not found');
+            throw new NotFoundException($this->c->request, $this->c->response);
         }
 
         $validate = $this->validateForm($request->getBodyParams());

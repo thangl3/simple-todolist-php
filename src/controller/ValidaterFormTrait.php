@@ -6,6 +6,13 @@ use App\Utils\Util;
 
 trait ValidaterFormTrait
 {
+    /**
+     * Validate and convert un-safe data to safe data
+     * for all paramter for create, update a work
+     *
+     * @param array $params
+     * @return void
+     */
     public function validateForm(array $params)
     {
         $isOk = false;
@@ -79,6 +86,13 @@ trait ValidaterFormTrait
         return false;
     }
 
+    /**
+     * Whether the starting date to do is greater than ending date
+     *
+     * @param string $startDate
+     * @param string $endDate
+     * @return boolean
+     */
     public function isStartDateGreaterThanEndDate($startDate, $endDate)
     {
         if (Util::compareTwoDate($startDate, $endDate) >= 0) {
@@ -88,6 +102,12 @@ trait ValidaterFormTrait
         return true;
     }
 
+    /**
+     * Whether the end day is lower than current day (today)?
+     *
+     * @param string $endDate
+     * @return boolean
+     */
     public function isEndDateLowerThanToday($endDate)
     {
         if (Util::compareWithCurrentDate($endDate) >= 0) {

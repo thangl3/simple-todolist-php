@@ -10,6 +10,14 @@ class CreateController extends Controller
 {
     use ValidaterFormTrait;
 
+    /**
+     * Name of function must be mapping with call router
+     * Control display page or create a work
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
     public function createWork(Request $request, Response $response) : Response
     {
         $success = null;
@@ -52,7 +60,7 @@ class CreateController extends Controller
     /**
      * For testing about create a work
      *
-     * @param [type] $request
+     * @param Request $request
      * @return void
      */
     public function mockTestCreate($request)
