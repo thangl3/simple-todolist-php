@@ -83,22 +83,18 @@ class WorkBO
         $startDate = Util::extractDatetime($dataWork['startDate']);
         $endDate = Util::extractDatetime($dataWork['endDate']);
 
-        if (isset($startDate['day']) && isset($endDate['day'])) {
-            $work = new Work();
+        $work = new Work();
 
-            $work->workName = $dataWork['workName'];
-            $work->startDay = $startDate['day'];
-            $work->startMonth = $startDate['month'];
-            $work->startYear = $startDate['year'];
-            $work->endDay = $endDate['day'];
-            $work->endMonth = $endDate['month'];
-            $work->endYear = $endDate['year'];
-            $work->status = 1;
+        $work->workName = $dataWork['workName'];
+        $work->startDay = $startDate['day'];
+        $work->startMonth = $startDate['month'];
+        $work->startYear = $startDate['year'];
+        $work->endDay = $endDate['day'];
+        $work->endMonth = $endDate['month'];
+        $work->endYear = $endDate['year'];
+        $work->status = 1;
 
-            return $this->workDao->create($work);
-        }
-
-        return -1;
+        return $this->workDao->create($work);
     }
 
     /**
@@ -113,9 +109,7 @@ class WorkBO
         $startDate = Util::extractDatetime($dataWork['startDate']);
         $endDate = Util::extractDatetime($dataWork['endDate']);
 
-        if (isset($startDate['day'])
-                && isset($endDate['day']) 
-                && $statusBo->isValidStatus($dataWork['status'])) {
+        if ($statusBo->isValidStatus($dataWork['status'])) {
             $work = new Work();
             $work->workId = $dataWork['workId'];
             $work->workName = $dataWork['workName'];

@@ -24,7 +24,7 @@ class StatusBO
 
     public function isValidStatus($key) : bool
     {
-        if ($this->getByKey($key) !== '') {
+        if ($this->getStatusByKey($key) !== '') {
             return true;
         }
 
