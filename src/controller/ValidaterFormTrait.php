@@ -18,9 +18,9 @@ trait ValidaterFormTrait
         $isOk = false;
         $message = null;
 
-        $workName = $params['workName'];
-        $startDate = $params['startDate'];
-        $endDate = $params['endDate'];
+        $workName = $params['workName'] ?? '';
+        $startDate = $params['startDate'] ?? '';
+        $endDate = $params['endDate'] ?? '';
 
         // TODO - filter params for prevent the XSS attack
 
