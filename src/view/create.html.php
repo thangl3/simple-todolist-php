@@ -58,15 +58,15 @@
                 <form action="/create" method="POST">
                     <div class="form-group">
                         <label for="workNameInput">Work name</label>
-                        <input type="text" class="form-control" id="workNameInput" name="workName" placeholder="Enter name of work" require>
+                        <input type="text" class="form-control" id="workNameInput" name="workName" placeholder="Enter name of work" required>
                     </div>
                     <div class="form-group">
                         <label for="startDateInput">Start date</label>
-                        <input type="date" class="form-control" id="startDateInput" name="startDate" require>
+                        <input type="date" class="form-control" id="startDateInput" name="startDate" required>
                     </div>
                     <div class="form-group">
                         <label for="endDateInput">End date</label>
-                        <input type="date" class="form-control" id="endDateInput" name="endDate" require>
+                        <input type="date" class="form-control" id="endDateInput" name="endDate" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
