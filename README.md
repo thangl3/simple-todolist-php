@@ -1,5 +1,6 @@
 # simple-todolist-php
 A simple to do list made with PHP language.
+It already for running on server and testing.
 
 ## Usage
 
@@ -18,8 +19,16 @@ $ composer dumpautoload -o
 ```
 
 4. You may quickly test this using the built-in PHP server:
+At root folder of it run this command
 
 ```bash
-$ cd myproject
 $ php -S localhost:8080 -t public index.php
+```
+
+## Testing
+
+Run this command for testing. Make sure you have data on database.
+
+```bash
+$ composer run test
 ```
