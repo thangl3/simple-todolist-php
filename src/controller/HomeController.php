@@ -13,8 +13,8 @@ class HomeController extends Controller
         $statusBo = new StatusBO();
         $workBo = new WorkBO($this->c->db);
 
-        $works = $workBo->selectAll();
-        $status = $statusBo->getAll();
+        $status = $statusBo->getStatuses();
+        $works = $workBo->getWorks();
 
         return $this->c->view->render(
             $response,
