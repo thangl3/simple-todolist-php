@@ -11,10 +11,11 @@ use App\Model\BO\StatusBO;
 
 class UpdateController extends Controller
 {
+    use ValidaterFormTrait;
+
     public function updateWork(Request $request, Response $response) : Response
     {
         $workId = (int) $request->getParam('id');
-        $statusBo = new StatusBO();
         $workBo = new WorkBO($this->c->db);
 
         $success = null;
@@ -27,35 +28,18 @@ class UpdateController extends Controller
                 throw new Exception('Not found');
             }
 
-            $canCreateWork = true;
+            $validate = $this->validateForm($request->getBodyParams());
+            $notify = $validate['message'];
 
-            $workName = $request->getBodyParam('workName');
-            $startDate = $request->getBodyParam('startDate');
-            $endDate = $request->getBodyParam('endDate');
-            $status = $request->getBodyParam('status');
+            if ($validate['isOk']) {
+                $safeVariable = $validate['safeVar'];
 
-            // if (Util::compareTwoDate($startDate, $endDate) >= 0) {
-            //     if (Util::compareWithCurrentDate($endDate) >= 0) {
-            //         $canCreateWork = true;
-            //     } else {
-            //         $notify = Constant::END_DATE_LOWER_THAN_CURRENT;
-            //     }
-            // } else {
-            //     $notify = Constant::STARTDATE_BIGGER_THAN_ENDDATE;
-            // }
-
-            if (!$workName) {
-                $notify = Constant::INVALID_WORKNAME;
-                $canCreateWork = false;
-            }
-
-            if ($canCreateWork) {
                 $isSuccess = $workBo->updateWork([
-                    'workId' => $workId,
-                    'workName' => $workName,
-                    'startDate' => $startDate,
-                    'endDate' => $endDate,
-                    'status' => $status
+                    'workId' => $safeVariable['workId'],
+                    'workName' => $safeVariable['workName'],
+                    'startDate' => $safeVariable['startDate'],
+                    'endDate' => $safeVariable['endDate'],
+                    'status' => $safeVariable['status']
                 ]);
 
                 if ($isSuccess) {
@@ -66,6 +50,7 @@ class UpdateController extends Controller
             }
         }
 
+        $statusBo = new StatusBO();
         $status = $statusBo->getStatuses();
         $work = $workBo->getWorkById($workId);
 
@@ -105,5 +90,43 @@ class UpdateController extends Controller
         }
 
         return $response->withJson(json_encode(['message' => $message]));
+    }
+
+    public function mockTestUpdate($request)
+    {
+        $success = null;
+        $error = null;
+        $workId = (int) $request->getParam('workId');
+        $workBo = new WorkBO($this->c->db);
+
+        if (!$workBo->hasWork($workId)) {
+            throw new Exception('Not found');
+        }
+
+        $validate = $this->validateForm($request->getBodyParams());
+
+        if ($validate['isOk']) {
+            $safeVariable = $validate['safeVar'];
+
+            $isSuccess = $workBo->updateWork([
+                'workId' => $safeVariable['workId'],
+                'workName' => $safeVariable['workName'],
+                'startDate' => $safeVariable['startDate'],
+                'endDate' => $safeVariable['endDate'],
+                'status' => $safeVariable['status']
+            ]);
+
+            if ($isSuccess) {
+                $success = Constant::UPDATE_SUCCESS;
+            } else {
+                $error = Constant::UPDATE_FAIL;
+            }
+        }
+
+        return [
+            'success'   => $success,
+            'notify'    => $validate['message'],
+            'error'     => $error
+        ];
     }
 }

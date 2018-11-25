@@ -4,11 +4,12 @@ namespace App\Controller;
 use Helper\Route\Http\RequestInterface as Request;
 use Helper\Route\Http\ResponseInterface as Response;
 use App\Utils\Constant;
-use App\Utils\Util;
 use App\Model\BO\WorkBO;
 
 class CreateController extends Controller
 {
+    use ValidaterFormTrait;
+
     public function createWork(Request $request, Response $response) : Response
     {
         $success = null;
@@ -16,34 +17,17 @@ class CreateController extends Controller
         $notify = null;
 
         if ($request->isPost()) {
-            $canCreateWork = false;
+            $validate = $this->validateForm($request->getBodyParams());
+            $notify = $validate['message'];
 
-            $workName = $request->getBodyParam('workName');
-            $startDate = $request->getBodyParam('startDate');
-            $endDate = $request->getBodyParam('endDate');
-
-            if (Util::compareTwoDate($startDate, $endDate) >= 0) {
-                if (Util::compareWithCurrentDate($endDate) >= 0) {
-                    $canCreateWork = true;
-                } else {
-                    $notify = Constant::END_DATE_LOWER_THAN_CURRENT;
-                }
-            } else {
-                $notify = Constant::STARTDATE_BIGGER_THAN_ENDDATE;
-            }
-
-            if (!$workName) {
-                $notify = Constant::INVALID_WORKNAME;
-                $canCreateWork = false;
-            }
-
-            if ($canCreateWork) {
+            if ($validate['isOk']) {
                 $workBo = new WorkBO($this->c->db);
+                $safeVariable = $validate['safeVar'];
 
                 $latestId = $workBo->createWork([
-                    'workName' => $request->getBodyParam('workName'),
-                    'startDate' => $request->getBodyParam('startDate'),
-                    'endDate' => $request->getBodyParam('endDate')
+                    'workName' => $safeVariable['workName'],
+                    'startDate' => $safeVariable['startDate'],
+                    'endDate' => $safeVariable['endDate']
                 ]);
 
                 if ($latestId > 0) {
@@ -58,10 +42,47 @@ class CreateController extends Controller
             $response,
             'create.html.php',
             [
-                'success' => $success,
-                'notify' => $notify,
-                'error' => $error
+                'success'   => $success,
+                'notify'    => $notify,
+                'error'     => $error
             ]
         );
+    }
+
+    /**
+     * For testing about create a work
+     *
+     * @param [type] $request
+     * @return void
+     */
+    public function mockTestCreate($request)
+    {
+        $success = null;
+        $error = null;
+
+        $validate = $this->validateForm($request->getBodyParams());
+
+        if ($validate['isOk']) {
+            $workBo = new WorkBO($this->c->db);
+            $safeVariable = $validate['safeVar'];
+
+            $latestId = $workBo->createWork([
+                'workName' => $safeVariable['workName'],
+                'startDate' => $safeVariable['startDate'],
+                'endDate' => $safeVariable['endDate']
+            ]);
+
+            if ($latestId > 0) {
+                $success = Constant::CREATE_SUCCESS;
+            } else {
+                $error = Constant::CREATE_FAIL;
+            }
+        }
+
+        return [
+            'success'   => $success,
+            'notify'    => $validate['message'],
+            'error'     => $error
+        ];
     }
 }
