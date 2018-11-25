@@ -5,37 +5,44 @@ use Exception;
 
 class Response implements ResponseInterface
 {
-    private $output;
+    private $body;
 
-    public function write($output) : ResponseInterface
+    public function write($body) : ResponseInterface
     {
-        try {
-            ob_start();
-            if (is_callable($output)) {
-                echo $output();
-            } else {
-                echo $output;
-            }
-        } catch (Exception $ex) {
-            // keep slient this exception because this is the last handle error
-            // throw $ex;
-        } finally {
-            echo ob_get_clean();
+        ob_start();
+
+        if (is_callable($body)) {
+            $this->body = $body();
+            echo $body();
+        } elseif ($body !== null) {
+            $this->body = $body;
+            echo $body;
+        } else {
+            echo $this->getBody();
         }
 
-        return $this;
+        echo ob_get_clean();
+
+        return clone $this;
     }
 
-    public function setOutput($output)
+    public function setBody($body)
     {
-        $this->output = $output;
+        $this->body = $body;
     }
 
-    public function getOutput()
+    public function getBody()
     {
-        return $this->output;
+        return $this->body;
     }
 
+    /**
+     * Redirect path to new address
+     *
+     * @param string $pathTo
+     * @param integer $statusCode
+     * @return void
+     */
     public function redirectTo(string $pathTo, int $statusCode = 301)
     {
         header('Location: ' .$pathTo, true, $statusCode);
@@ -43,10 +50,29 @@ class Response implements ResponseInterface
         return $this;
     }
 
+    /**
+     * Set output to client is json
+     *
+     * @param string $json
+     * @return void
+     */
     public function withJson(string $json)
     {
         header('Content-Type: application/json');
-        $this->setOutput($json);
+        $this->setBody($json);
+
+        return $this;
+    }
+
+    /**
+     * Set status code to header response
+     *
+     * @param int $statusCode
+     * @return void
+     */
+    public function withStatus($statusCode)
+    {
+        http_response_code($statusCode);
 
         return $this;
     }

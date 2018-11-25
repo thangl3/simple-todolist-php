@@ -3,5 +3,7 @@ namespace Helper\Route\Http;
 
 interface ResponseInterface
 {
-    public function write($output) : self;
+    public function write($body) : self;
+    public function getBody();
+    public function setBody($body);
 }

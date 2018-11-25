@@ -48,7 +48,7 @@ class ViewEngine
             return ob_get_clean();
         };
 
-        $response->setOutput($extractOutputView);
+        $response->setBody($extractOutputView);
 
         return $response;
     }
