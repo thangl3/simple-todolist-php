@@ -2,6 +2,7 @@
 namespace Test;
 
 use PHPUnit\Framework\TestCase;
+use Helper\Route\Exception\NotFoundException;
 use App\Utils\Constant;
 use App\Controller\UpdateController;
 
@@ -10,7 +11,13 @@ class UpdateWorkTest extends TestCase
     use HelperDriverTrait;
 
     /**
+     * Test update work is ok with valid data
+     * 
      * @dataProvider dataUpdateWorkProvider
+     *
+     * @param array $data
+     * @param array $expectedResult
+     * @return void
      */
     public function testSuccessUpdateWork($data, $expectedResult)
     {
@@ -37,7 +44,13 @@ class UpdateWorkTest extends TestCase
     }
 
     /**
+     * Test update work is fail with invalid data
+     * 
      * @dataProvider dataUpdateWorkProvider
+     *
+     * @param array $data
+     * @param array $expectedResult
+     * @return void
      */
     public function testFailureUpdateWork($data, $expectedResult)
     {
@@ -236,5 +249,185 @@ class UpdateWorkTest extends TestCase
                 ]
             ]
         ];
+    }
+
+    /**
+     * Fail if id not valid
+     *
+     * @return void
+     */
+    public function testFailureUpdateIfInvalidId()
+    {
+        $this->expectException(NotFoundException::class);
+
+        $container = $this->mockContainer();
+        $ctrl = new UpdateController($container);
+
+        $request = $this->mockPostRequestWithParams([
+            'workId' => 'asdd'
+        ]);
+        $ctrl->mockTestUpdate($request);
+    }
+
+    /**
+     * Fail if id is empty
+     *
+     * @return void
+     */
+    public function testFailureUpdateIfEmptyId()
+    {
+        $this->expectException(NotFoundException::class);
+
+        $container = $this->mockContainer();
+        $ctrl = new UpdateController($container);
+
+        $request = $this->mockPostRequestWithParams([
+            'workId' => ''
+        ]);
+        $ctrl->mockTestUpdate($request);
+    }
+
+    /**
+     * Fail if if not has on server
+     *
+     * @return void
+     */
+    public function testFailureUpdateIfNotHasId()
+    {
+        $this->expectException(NotFoundException::class);
+
+        $container = $this->mockContainer();
+        $ctrl = new UpdateController($container);
+
+        $request = $this->mockPostRequestWithParams([
+            'workId' => '1000'
+        ]);
+        $ctrl->mockTestUpdate($request);
+    }
+
+    /**
+     * Can update status with true data
+     *
+     * @return void
+     */
+    public function testSuccessUpdateStatusOfWork()
+    {
+        $container = $this->mockContainer();
+        $request = $this->mockPostRequestWithParams([
+            'id' => rand(1, 16),
+            'status' => 1
+        ]);
+
+        $ctrl = new UpdateController($container);
+        $response = $ctrl->updateStatus($request, $container->response);
+
+        $this->assertJsonStringEqualsJsonString(
+            json_encode([
+                'message' => Constant::UPDATE_STATUS_SUCCESS
+            ]),
+            $response->getBody()
+        );
+    }
+
+    /**
+     * Fail if update with status not has in range (1-3)
+     *
+     * @return void
+     */
+    public function testFailureUpdateStatusOfWorkIfStatusNotHas()
+    {
+        $container = $this->mockContainer();
+        $request = $this->mockPostRequestWithParams([
+            'id' => rand(3, 29),
+            'status' => 4
+        ]);
+
+        $ctrl = new UpdateController($container);
+        $response = $ctrl->updateStatus($request, $container->response);
+
+        $this->assertJsonStringEqualsJsonString(
+            json_encode([
+                'message' => Constant::UPDATE_STATUS_FAIL
+            ]),
+            $response->getBody()
+        );
+    }
+
+    /**
+     * Fail if status is string
+     *
+     * @return void
+     */
+    public function testFailureUpdateStatusIfStatusInvalid()
+    {
+        $container = $this->mockContainer();
+        $request = $this->mockPostRequestWithParams([
+            'id' => rand(3, 29),
+            'status' => 'asd'
+        ]);
+
+        $ctrl = new UpdateController($container);
+        $response = $ctrl->updateStatus($request, $container->response);
+
+        $this->assertJsonStringEqualsJsonString(
+            json_encode([
+                'message' => Constant::UPDATE_STATUS_FAIL
+            ]),
+            $response->getBody()
+        );
+    }
+
+    /**
+     * Test NotFoundException will throw if not has id
+     *
+     * @return void
+     */
+    public function testExceptionUpdateStatusIfNotHasId()
+    {
+        $this->expectException(NotFoundException::class);
+
+        $container = $this->mockContainer();
+        $ctrl = new UpdateController($container);
+
+        $request = $this->mockPostRequestWithParams([
+            'workId' => '1000'
+        ]);
+        $ctrl->updateStatus($request, $container->response);
+    }
+
+    /**
+     * Test NotFoundException will throw if id is empty
+     *
+     * @return void
+     */
+    public function testExceptionUpdateStatusIfEmptyId()
+    {
+        $this->expectException(NotFoundException::class);
+
+        $container = $this->mockContainer();
+        $ctrl = new UpdateController($container);
+
+        $request = $this->mockPostRequestWithParams([
+            'workId' => ''
+        ]);
+        $ctrl->updateStatus($request, $container->response);
+    }
+
+    /**
+     * Test NotFoundException will throw if id is invalid
+     *
+     * @return void
+     */
+    public function testExceptionUpdateStatusIfInvalidId()
+    {
+        $this->expectException(NotFoundException::class);
+
+        $container = $this->mockContainer();
+        $ctrl = new UpdateController($container);
+
+        $request = $this->mockPostRequestWithParams([
+            'workId' => '1asd'
+        ]);
+        $ctrl->updateStatus($request, $container->response);
     }
 }
