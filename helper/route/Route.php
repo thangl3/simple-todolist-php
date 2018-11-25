@@ -6,6 +6,7 @@ use Throwable;
 use Helper\Route\Http\Method;
 use Helper\Route\Http\RequestInterface as Request;
 use Helper\Route\Http\ResponseInterface as Response;
+use Helper\Route\Exception\NotFoundException;
 
 class Route
 {
@@ -58,12 +59,16 @@ class Route
             $response = $this->handleException($e, $request, $response);
         }
 
-        return $response->write($response->getOutput());
+        return $response->write($response->getBody());
     }
 
     private function handleException(Exception $error, Request $request, Response $response)
     {
         $handler = $this->container->get('exceptionHandler');
+
+        if ($error instanceof NotFoundException) {
+            $handler = $this->container->get('notFoundHandler');
+        }
 
         if (is_callable($handler)) {
             // call the closure if custom has overrided runtimeErrorHandler in default service

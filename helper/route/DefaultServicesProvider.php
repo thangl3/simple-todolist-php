@@ -46,6 +46,15 @@ class DefaultServicesProvider
             };
         }
 
+        if (!isset($container['notFoundHandler'])) {
+            $container['notFoundHandler'] = function ($container) {
+                return function($error, $request, $response) {
+                    $response->withStatus(404);
+                    return $response->write('Not found this route on the server, please make sure you enter right address!');
+                };
+            };
+        }
+
         if (!isset($container['exceptionHandler'])) {
             // Closure recieved all exception of app
             $container['exceptionHandler'] = function ($container) {

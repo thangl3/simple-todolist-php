@@ -1,7 +1,7 @@
 <?php
 namespace Helper\Route;
 
-use Exception;
+use Helper\Route\Exception\NotFoundException;
 
 class Router
 {
@@ -34,6 +34,6 @@ class Router
             return $this->routes[$method][$pattern];
         }
 
-        throw new Exception('Not found this route');
+        throw new NotFoundException($this->container->request, $this->container->response);
     }
 }
