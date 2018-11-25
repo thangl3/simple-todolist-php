@@ -30,7 +30,7 @@
     <div class="container mt-3">
         <div class="row justify-content-md-center">
             <!-- Display error or successfuly message here -->
-            <?php if ($success) { ?>
+            <?php if (isset($success)) { ?>
                 <div class="col-12">
                     <div class="alert alert-success text-center" role="alert">
                         <?= $success ?>
@@ -38,7 +38,7 @@
                 </div>
                 <?php } ?>
 
-                <?php if ($notify) { ?>
+                <?php if (isset($notify)) { ?>
                 <div class="col-12">
                     <div class="alert alert-warning text-center" role="alert">
                         <?= $notify ?>
@@ -46,14 +46,15 @@
                 </div>
                 <?php } ?>
 
-                <?php if ($error) { ?>
+                <?php if (isset($error)) { ?>
                 <div class="col-12">
                     <div class="alert alert-danger text-center" role="alert">
                         <?= $error ?>
                     </div>
                 </div>
             <?php } ?>
-
+            <!-- end -->
+            
             <div class="col-offset-4 col-8">
                 <form action="/create" method="POST">
                     <div class="form-group">

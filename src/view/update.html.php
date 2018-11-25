@@ -30,7 +30,7 @@
     <div class="container mt-3">
         <div class="row justify-content-md-center">
             <!-- Display error or successfuly message here -->
-            <?php if ($success) { ?>
+            <?php if (isset($success)) { ?>
                 <div class="col-12">
                     <div class="alert alert-success text-center" role="alert">
                         <?= $success ?>
@@ -38,7 +38,7 @@
                 </div>
                 <?php } ?>
 
-                <?php if ($notify) { ?>
+                <?php if (isset($notify)) { ?>
                 <div class="col-12">
                     <div class="alert alert-warning text-center" role="alert">
                         <?= $notify ?>
@@ -46,7 +46,7 @@
                 </div>
                 <?php } ?>
 
-                <?php if ($error) { ?>
+                <?php if (isset($error)) { ?>
                 <div class="col-12">
                     <div class="alert alert-danger text-center" role="alert">
                         <?= $error ?>
@@ -63,15 +63,15 @@
                     </div>
                     <div class="form-group">
                         <label for="startDateInput">Start date</label>
-                        <input type="date" class="form-control" id="startDateInput" name="startDate" value="<?= $work->startDate ?>" />
+                        <input type="date" class="form-control" id="startDateInput" name="startDate" value="<?= $work->startDate ?>" required />
                     </div>
                     <div class="form-group">
                         <label for="endDateInput">End date</label>
-                        <input type="date" class="form-control" id="endDateInput" name="endDate" value="<?= $work->endDate ?>" />
+                        <input type="date" class="form-control" id="endDateInput" name="endDate" value="<?= $work->endDate ?>" required />
                     </div>
                     <div class="form-group">
                         <label for="statusSelect">Status</label>
-                        <select class="form-control" id="statusSelect" name="status" value="<?= $work->status ?>">
+                        <select class="form-control" id="statusSelect" name="status" value="<?= $work->status ?>" required>
                             <?php foreach ($status as $key => $value) { ?>
                             <option value="<?= $key ?>" <?= $work->status == $key ? 'selected' : '' ?>>
                                 <?= $value ?></option>
