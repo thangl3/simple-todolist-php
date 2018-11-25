@@ -105,7 +105,7 @@ class WorkDAO
         );
     }
 
-    public function updateStatus(Work $work) : int
+    public function updateOnlyStatus(Work $work) : int
     {
         $sql = 'UPDATE work
                 SET status      = :status

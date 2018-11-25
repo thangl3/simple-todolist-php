@@ -12,12 +12,12 @@ class StatusBO
         $this->status = new Status();
     }
 
-    public function getAll() : array
+    public function getStatuses() : array
     {
         return $this->status->getAll();
     }
 
-    public function getByKey(int $key) : string
+    public function getStatusByKey(int $key) : string
     {
         return $this->status->get($key);
     }

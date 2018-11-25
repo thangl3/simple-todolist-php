@@ -25,7 +25,7 @@ class WorkBO
      * @param integer $workId
      * @return Work
      */
-    public function selectById(int $workId) : Work
+    public function getWorkById(int $workId) : Work
     {
         $dataArray = $this->workDao->select($workId);
 
@@ -48,7 +48,7 @@ class WorkBO
      *
      * @return array
      */
-    public function selectAll() : array
+    public function getWorks() : array
     {
         $rawData = $this->workDao->selectAll();
         $works = [];
@@ -77,7 +77,7 @@ class WorkBO
      * @param array $dataWork
      * @return integer
      */
-    public function create(array $dataWork) : int
+    public function createWork(array $dataWork) : int
     {
         $statusBo = new StatusBO();
         $startDate = Util::extractDatetime($dataWork['startDate']);
@@ -107,7 +107,7 @@ class WorkBO
      * @param array $dataWork
      * @return boolean
      */
-    public function update(array $dataWork) : bool
+    public function updateWork(array $dataWork) : bool
     {
         $statusBo = new StatusBO();
         $startDate = Util::extractDatetime($dataWork['startDate']);
@@ -142,7 +142,7 @@ class WorkBO
             $work->workId = (int) $dataWork['workId'];
             $work->status = (int) $dataWork['status'];
 
-            return $this->workDao->updateStatus($work) === 1;
+            return $this->workDao->updateOnlyStatus($work) === 1;
         }
 
         return false;
@@ -154,7 +154,7 @@ class WorkBO
      * @param integer $workId
      * @return boolean
      */
-    public function delete(int $workId) : bool
+    public function deleteWork(int $workId) : bool
     {
         return $this->workDao->delete($workId) === 1;
     }
