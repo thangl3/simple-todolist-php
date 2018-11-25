@@ -9,6 +9,8 @@ class Request implements RequestInterface
     private $extractUri;
     private $requestUri;
     private $method;
+    private $bodyParams;
+    private $queryParams;
 
     public function __construct(Environment $environment)
     {
@@ -21,6 +23,8 @@ class Request implements RequestInterface
         $this->method = $this->environment->get('REQUEST_METHOD');
         $this->requestUri = $this->environment->get('REQUEST_URI');
         $this->extractUri = parse_url('http://abc.abc' .$this->requestUri, PHP_URL_PATH);
+        $this->bodyParams = $_POST;
+        $this->queryParams = $_GET;
     }
 
     public function isPost() : bool
@@ -43,6 +47,21 @@ class Request implements RequestInterface
         return $this->method;
     }
 
+    public function setMethod($method)
+    {
+        $this->method = $method;
+    }
+
+    public function setIsPostMethod()
+    {
+        $this->setMethod(Method::$POST);
+    }
+
+    public function setIsGetMethod()
+    {
+        $this->setMethod(Method::$GET);
+    }
+
     /**
      * Return an array contain all value sent parsed vie method POST
      *
@@ -53,8 +72,8 @@ class Request implements RequestInterface
         if ($this->isPost()) {
             $params = [];
 
-            foreach($_POST as $key => $value) {
-                $params[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_SPECIAL_CHARS);
+            foreach($this->bodyParams as $key => $value) {
+                $params[$key] = filter_var($value, FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
             }
 
             return $params;
@@ -72,8 +91,8 @@ class Request implements RequestInterface
     public function getBodyParam(string $key) : string
     {
         if ($this->isPost()) {
-            if (isset($_POST[$key])) {
-                return filter_input(INPUT_POST, $key, FILTER_SANITIZE_SPECIAL_CHARS);
+            if (isset($this->bodyParams[$key])) {
+                return filter_var($this->bodyParams[$key], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
             }
         }
 
@@ -90,8 +109,8 @@ class Request implements RequestInterface
         if ($this->isGet()) {
             $params = [];
 
-            foreach($_GET as $key => $value) {
-                $params[$key] = filter_input(INPUT_GET, $key, FILTER_SANITIZE_SPECIAL_CHARS);
+            foreach($this->queryParams as $key => $value) {
+                $params[$key] = filter_var($value, FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
             }
 
             return $params;
@@ -109,8 +128,8 @@ class Request implements RequestInterface
     public function getQueryParam(string $key) : string
     {
         if ($this->isGet()) {
-            if (isset($_GET[$key])) {
-                return filter_input(INPUT_GET, $key, FILTER_SANITIZE_SPECIAL_CHARS);
+            if (isset($this->queryParams[$key])) {
+                return filter_var($this->queryParams[$key], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
             }
         }
 
@@ -156,5 +175,25 @@ class Request implements RequestInterface
         } else {
             return '/';
         }
+    }
+
+    public function withQueryParams(array $params)
+    {
+        $this->queryParams = $params;
+    }
+
+    public function withBodyParams(array $params)
+    {
+        $this->bodyParams = $params;
+    }
+
+    public function withQueryParam(string $key, string $value)
+    {
+        $this->queryParams[$key] = $value;
+    }
+
+    public function withBodyParam(string $key, string $value)
+    {
+        $this->bodyParams[$key] = $value;
     }
 }
