@@ -43,6 +43,11 @@ class Route
         $this->map(Method::PUT, $pattern, $callable);
     }
 
+    public function patch(string $pattern, $callable)
+    {
+        $this->map(Method::PATCH, $pattern, $callable);
+    }
+
     public function delete(string $pattern, $callable)
     {
         $this->map(Method::DELETE, $pattern, $callable);
