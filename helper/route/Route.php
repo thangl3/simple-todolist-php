@@ -46,11 +46,11 @@ class Route
     {
         $callableResolved = $this->callableResolver->resolve($callable);
         
-        $groupRoute = $this->container->router->pushGroup($pattern, $callableResolved);
+        $groupRoute = $this->container->router->createGroup($pattern, $callableResolved);
 
         $groupRoute($this);
 
-        $this->container->router->popGroup();
+        $this->container->router->flushGroup();
     }
 
     /**

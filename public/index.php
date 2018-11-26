@@ -18,7 +18,6 @@ $settings = [
 ];
 
 $route = new \Helper\Route\Route($settings);
-
 $container = $route->getContainer();
 
 $container['db'] = function ($container) {
@@ -40,16 +39,13 @@ $container['view'] = function ($container) {
 };
 
 $route->get('/',                HomeController::class   .'@index');
-$route->get('/create',          CreateController::class .'@createWork');
-$route->get('/update',          UpdateController::class .'@updateWork');
-
-$route->post('/create',         CreateController::class .'@createWork');
-$route->post('/update',         UpdateController::class .'@updateWork');
-$route->post('/change-status',  UpdateController::class .'@updateStatus');
-$route->post('/delete',         DeleteController::class .'@deleteWork');
 
 $route->group('/api', function () {
-    $this->get('/works',        HomeController::class   .'@listWork');
+    $this->get('/works',           HomeController::class   .'@listWork');
+    $this->post('/create',         CreateController::class .'@createWork');
+    $this->post('/update',         UpdateController::class .'@updateWork');
+    $this->post('/change-status',  UpdateController::class .'@updateStatus');
+    $this->post('/delete',         DeleteController::class .'@deleteWork');
 });
 
 $route->handle();

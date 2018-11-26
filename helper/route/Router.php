@@ -6,7 +6,6 @@ use Helper\Route\Exception\NotFoundException;
 class Router
 {
     private $routes = [];
-    private $groupRoutes = [];
     private $groupPattern;
     private $container;
 
@@ -24,18 +23,15 @@ class Router
         $this->routes[$method][$pattern] = $callback;
     }
 
-    public function pushGroup(string $pattern, callable $callable)
+    public function createGroup(string $pattern, callable $callable)
     {
-        $group = new RouteGroup($pattern, $callable);
-        array_push($this->groupRoutes, $group);
         $this->setGroupPattern($pattern);
 
-        return $group;
+        return new RouteGroup($pattern, $callable);
     }
 
-    public function popGroup()
+    public function flushGroup()
     {
-        array_pop($this->groupRoutes);
         $this->setGroupPattern(null);
     }
 
