@@ -1,5 +1,4 @@
 <?php
-
 require __DIR__ . '/../vendor/autoload.php';
 
 use App\Controller\HomeController;
@@ -22,7 +21,7 @@ $route = new \Helper\Route\Route($settings);
 
 $container = $route->getContainer();
 
-$container['db'] = function($container) {
+$container['db'] = function ($container) {
     $db = $container->settings['db'];
 
     $pdo = new \PDO(
@@ -36,7 +35,7 @@ $container['db'] = function($container) {
     return $pdo;
 };
 
-$container['view'] = function($container) {
+$container['view'] = function ($container) {
     return new Helper\View\ViewEngine($container->settings['viewPath']);
 };
 
@@ -49,7 +48,7 @@ $route->post('/update',         UpdateController::class .'@updateWork');
 $route->post('/change-status',  UpdateController::class .'@updateStatus');
 $route->post('/delete',         DeleteController::class .'@deleteWork');
 
-$route->group('/api', function() {
+$route->group('/api', function () {
     $this->get('/works',        HomeController::class   .'@listWork');
 });
 
