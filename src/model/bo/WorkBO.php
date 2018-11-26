@@ -53,7 +53,7 @@ class WorkBO
                                             $dataArray['end_month'],
                                             $dataArray['end_year']
                                         );
-            array_push($works, (new Work($dataArray))->toArray());
+            array_push($works, (new Work($dataArray)));
         }
 
         return $works;

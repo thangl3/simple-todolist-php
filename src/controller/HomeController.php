@@ -18,9 +18,19 @@ class HomeController extends Controller
      */
     public function index(Request $request, Response $response) : Response
     {
+        $statusBo = new StatusBO();
+        $workBo = new WorkBO($this->c->db);
+
+        $status = $statusBo->getStatuses();
+        $works = $workBo->getWorks();
+
         return $this->c->view->render(
             $response,
-            'home2.html.php'
+            'home.html.php',
+            [
+                'works' => $works,
+                'status' => $status
+            ]
         );
     }
 

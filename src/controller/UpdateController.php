@@ -44,7 +44,7 @@ class UpdateController extends Controller
                 $safeVariable = $validate['safeVar'];
 
                 $isSuccess = $workBo->updateWork([
-                    'workId' => $safeVariable['workId'],
+                    'workId' => $safeVariable['id'],
                     'workName' => $safeVariable['workName'],
                     'startDate' => $safeVariable['startDate'],
                     'endDate' => $safeVariable['endDate'],

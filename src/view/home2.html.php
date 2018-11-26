@@ -214,7 +214,7 @@
                     return false;
                 }
 
-                axios.post('/create', {
+                axios.post('/api/create', {
                     'workName' : workName,
                     'startDate': this.startDate,
                     'endDate' : this.endDate
@@ -225,7 +225,7 @@
                 })
             },
             fetchWorks() {
-                axios.get('/works').then(response => {
+                axios.get('/api/works').then(response => {
                     this.works = response.data.works
                 }).catch(error => {
                     console.log(error)
