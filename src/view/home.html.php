@@ -405,18 +405,18 @@
 
                 if (editElement.hasClass('show')) {
                     // Hide edit area and display view
-                    editElement.removeClass('show bounceOutRight')
-                    editElement.addClass('hide bounceOutLeft')
+                    editElement.removeClass('show')
+                    editElement.addClass('hide')
 
-                    viewElement.removeClass('hide bounceOutLeft')
-                    viewElement.addClass('show bounceOutRight')
+                    viewElement.removeClass('hide')
+                    viewElement.addClass('show')
                 } else {
                     // Hide view area and display edit
-                    editElement.removeClass('hide bounceOutLeft')
-                    editElement.addClass('show bounceOutRight')
+                    editElement.removeClass('hide')
+                    editElement.addClass('show')
 
-                    viewElement.removeClass('show bounceOutRight')
-                    viewElement.addClass('hide bounceOutLeft')
+                    viewElement.removeClass('show')
+                    viewElement.addClass('hide')
                 }
             },
             async editWork(e, work, index) {
