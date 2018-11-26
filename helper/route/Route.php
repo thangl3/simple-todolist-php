@@ -38,6 +38,16 @@ class Route
         $this->map(Method::POST, $pattern, $callable);
     }
 
+    public function put(string $pattern, $callable)
+    {
+        $this->map(Method::PUT, $pattern, $callable);
+    }
+
+    public function delete(string $pattern, $callable)
+    {
+        $this->map(Method::DELETE, $pattern, $callable);
+    }
+
     /***************************************************
      * Route group method
      ***************************************************/
