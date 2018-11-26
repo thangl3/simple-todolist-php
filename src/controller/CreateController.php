@@ -20,13 +20,12 @@ class CreateController extends Controller
      */
     public function createWork(Request $request, Response $response) : Response
     {
-        $success = null;
-        $error = null;
-        $notify = null;
+        $message = null;
+        $isCreated = false;
 
         if ($request->isPost()) {
             $validate = $this->validateForm($request->getBodyParams());
-            $notify = $validate['message'];
+            $message = $validate['message'];
 
             if ($validate['isOk']) {
                 $workBo = new WorkBO($this->c->db);
@@ -39,11 +38,19 @@ class CreateController extends Controller
                 ]);
 
                 if ($latestId > 0) {
-                    $success = Constant::CREATE_SUCCESS;
+                    $message = Constant::CREATE_SUCCESS;
+                    $isCreated = true;
                 } else {
-                    $error = Constant::CREATE_FAIL;
+                    $message = Constant::CREATE_FAIL;
                 }
             }
+
+            $json = json_encode([
+                'result' => $isCreated,
+                'message' => $message
+            ]);
+
+            return $response->withJson($json);
         }
 
         return $this->c->view->render(

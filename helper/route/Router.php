@@ -56,7 +56,7 @@ class Router
 
     public function getGroupPattern()
     {
-        return $this->groupPattern ?? '';
+        return $this->groupPattern;
     }
 
     public function lookupRoute(string $method, string $pattern)
