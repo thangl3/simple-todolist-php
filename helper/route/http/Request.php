@@ -29,12 +29,12 @@ class Request implements RequestInterface
 
     public function isPost() : bool
     {
-        return $this->method === Method::$POST;
+        return $this->method === Method::POST;
     }
 
     public function isGet() : bool
     {
-        return $this->method === Method::$GET;
+        return $this->method === Method::GET;
     }
 
     /**
@@ -54,12 +54,12 @@ class Request implements RequestInterface
 
     public function setIsPostMethod()
     {
-        $this->setMethod(Method::$POST);
+        $this->setMethod(Method::POST);
     }
 
     public function setIsGetMethod()
     {
-        $this->setMethod(Method::$GET);
+        $this->setMethod(Method::GET);
     }
 
     /**

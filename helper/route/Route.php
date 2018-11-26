@@ -24,23 +24,40 @@ class Route
         return $this->container;
     }
 
+    /****************************************************
+     * Route method
+     ****************************************************/
+
     public function get(string $pattern, $callable)
     {
-        $this->map(Method::$GET, $pattern, $callable);
+        $this->map(Method::GET, $pattern, $callable);
     }
 
     public function post(string $pattern, $callable)
     {
-        $this->map(Method::$POST, $pattern, $callable);
+        $this->map(Method::POST, $pattern, $callable);
     }
 
-    private function map(string $method, string $pattern, $callable)
+    /***************************************************
+     * Route group method
+     ***************************************************/
+
+    public function group(string $pattern, $callable)
     {
         $callableResolved = $this->callableResolver->resolve($callable);
         
-        $router = $this->container->router->addRoute($method, $pattern, $callableResolved);
+        $groupRoute = $this->container->router->pushGroup($pattern, $callableResolved);
+
+        $groupRoute($this);
+
+        $this->container->router->popGroup();
     }
 
+    /**
+     * Received all request of user and handle
+     *
+     * @return void
+     */
     public function handle()
     {
         $request = $this->container->request;
@@ -62,6 +79,13 @@ class Route
         return $response->write($response->getBody());
     }
 
+    private function map(string $method, string $pattern, $callable)
+    {
+        $callableResolved = $this->callableResolver->resolve($callable);
+        
+        $router = $this->container->router->addRoute($method, $pattern, $callableResolved);
+    }
+
     private function handleException(Exception $error, Request $request, Response $response)
     {
         $handler = $this->container->get('exceptionHandler');
@@ -70,9 +94,11 @@ class Route
             $handler = $this->container->get('notFoundHandler');
         }
 
-        if (is_callable($handler)) {
-            // call the closure if custom has overrided runtimeErrorHandler in default service
+        // call the closure if custom has overrided runtimeErrorHandler in default service
+        if ($handler instanceof \Closure) {
             return call_user_func_array($handler, [$error, $request, $response]);
+        } elseif (is_callable($handler)) {
+            $handler($error, $request, $response);
         } else {
             // Call the return of closure had registered in default service
             return $handler;

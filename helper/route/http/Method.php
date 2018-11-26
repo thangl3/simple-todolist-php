@@ -3,6 +3,6 @@ namespace Helper\Route\Http;
 
 class Method
 {
-    public static $GET = 'GET';
-    public static $POST = 'POST';
+    const GET   = 'GET';
+    const POST  = 'POST';
 }
