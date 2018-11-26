@@ -19,9 +19,10 @@ class DeleteController extends Controller
      */
     public function deleteWork(Request $request, Response $response) : Response
     {
-        $workId = (int) $request->getBodyParam('id');
         $message = null;
+        $isSuccess = false;
 
+        $workId = (int) $request->getQueryParam('workId');
         $workBo = new WorkBO($this->c->db);
 
         if ($workBo->hasWork($workId)) {
@@ -33,9 +34,14 @@ class DeleteController extends Controller
                 $message = Constant::DELETE_FAIL;
             }
         } else {
-            throw new NotFoundException($request, $response);
+            $message = Constant::WORK_NOT_EXIST;
         }
 
-        return $response->withJson(json_encode(['message' => $message]));
+        $json = json_encode([
+            'result' => $isSuccess,
+            'message' => $message
+        ]);
+
+        return $response->withJson($json);
     }
 }

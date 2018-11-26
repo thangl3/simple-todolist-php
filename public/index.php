@@ -41,11 +41,12 @@ $container['view'] = function ($container) {
 $route->get('/',                HomeController::class   .'@index');
 
 $route->group('/api', function () {
-    $this->get('/works',           HomeController::class   .'@listWork');
-    $this->post('/create',         CreateController::class .'@createWork');
-    $this->post('/update',         UpdateController::class .'@updateWork');
-    $this->post('/change-status',  UpdateController::class .'@updateStatus');
-    $this->post('/delete',         DeleteController::class .'@deleteWork');
+    $this->get('/works',        HomeController::class   .'@fetchWorks');
+    $this->get('/work',         HomeController::class   .'@fetchWork');
+    $this->post('/work',        CreateController::class .'@createWork');
+    $this->put('/work',         UpdateController::class .'@updateWork');
+    $this->patch('/work',       UpdateController::class .'@updateStatus');
+    $this->delete('/work',      DeleteController::class .'@deleteWork');
 });
 
 $route->handle();

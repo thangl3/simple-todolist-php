@@ -19,22 +19,22 @@ class WorkBO
         return $this->workDao->has($workId);
     }
 
-    public function getWorkById(int $workId) : Work
+    public function getWork(int $workId) : Work
     {
         $dataArray = $this->workDao->select($workId);
 
-        $dataArray['start_date'] =   Util::createDatetime(
+        $dataArray['start_date'] = Util::createDatetime(
             $dataArray['start_day'],
             $dataArray['start_month'],
             $dataArray['start_year']
         );
-        $dataArray['end_date'] =   Util::createDatetime(
+        $dataArray['end_date'] = Util::createDatetime(
             $dataArray['end_day'],
             $dataArray['end_month'],
             $dataArray['end_year']
         );
-        
-        return new Work($dataArray);
+
+        return (new Work($dataArray))->toArray();
     }
 
     public function getWorks() : array
@@ -43,17 +43,17 @@ class WorkBO
         $works = [];
 
         foreach ($rawData as $key => $dataArray) {
-            $dataArray['start_date'] =   Util::createDatetime(
+            $dataArray['start_date']  = Util::createDatetime(
                                             $dataArray['start_day'],
                                             $dataArray['start_month'],
                                             $dataArray['start_year']
                                         );
-            $dataArray['end_date'] =   Util::createDatetime(
+            $dataArray['end_date']    = Util::createDatetime(
                                             $dataArray['end_day'],
                                             $dataArray['end_month'],
                                             $dataArray['end_year']
                                         );
-            array_push($works, (new Work($dataArray)));
+            array_push($works, (new Work($dataArray))->toArray());
         }
 
         return $works;
@@ -93,7 +93,7 @@ class WorkBO
             $work->startMonth = $startDate['month'];
             $work->startYear = $startDate['year'];
             $work->endDay = $endDate['day'];
-            $work->endYear = $endDate['month'];
+            $work->endMonth = $endDate['month'];
             $work->endYear = $endDate['year'];
             $work->status = $dataWork['status'];
 

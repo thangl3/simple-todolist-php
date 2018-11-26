@@ -21,47 +21,44 @@ class CreateController extends Controller
     public function createWork(Request $request, Response $response) : Response
     {
         $message = null;
-        $isCreated = false;
+        $isSuccess = false;
+        $data = null;
 
-        if ($request->isPost()) {
-            $validate = $this->validateForm($request->getBodyParams());
-            $message = $validate['message'];
+        $validate = $this->validateForm($request->getBodyParams());
+        $message = $validate['message'];
 
-            if ($validate['isOk']) {
-                $workBo = new WorkBO($this->c->db);
-                $safeVariable = $validate['safeVar'];
+        if ($validate['isOk']) {
+            $workBo = new WorkBO($this->c->db);
+            $safeVariable = $validate['safeVar'];
 
-                $latestId = $workBo->createWork([
-                    'workName' => $safeVariable['workName'],
-                    'startDate' => $safeVariable['startDate'],
-                    'endDate' => $safeVariable['endDate']
-                ]);
-
-                if ($latestId > 0) {
-                    $message = Constant::CREATE_SUCCESS;
-                    $isCreated = true;
-                } else {
-                    $message = Constant::CREATE_FAIL;
-                }
-            }
-
-            $json = json_encode([
-                'result' => $isCreated,
-                'message' => $message
+            $latestId = $workBo->createWork([
+                'workName' => $safeVariable['workName'],
+                'startDate' => $safeVariable['startDate'],
+                'endDate' => $safeVariable['endDate']
             ]);
 
-            return $response->withJson($json);
+            if ($latestId > 0) {
+                $message = Constant::CREATE_SUCCESS;
+                $isSuccess = true;
+                $data = [
+                    'workId' => $latestId,
+                    'workName' => $safeVariable['workName'],
+                    'startDate' => $safeVariable['startDate'],
+                    'endDate' => $safeVariable['endDate'],
+                    'status' => 1
+                ];
+            } else {
+                $message = Constant::CREATE_FAIL;
+            }
         }
 
-        return $this->c->view->render(
-            $response,
-            'create.html.php',
-            [
-                'success'   => $success,
-                'notify'    => $notify,
-                'error'     => $error
-            ]
-        );
+        $json = json_encode([
+            'result' => $isSuccess,
+            'message' => $message,
+            'data' => $data
+        ]);
+
+        return $response->withJson($json);
     }
 
     /**
