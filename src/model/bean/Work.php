@@ -80,7 +80,19 @@ class Work
         if (isset($data['deleted_at'])) {
             $this->deletedAt = $data['deleted_at'];
         }
-	}
+    }
+    
+    public function toArray()
+    {
+        return [
+            'workId' => $this->workId,
+            'workName' => $this->workName,
+            'startDate' => $this->startDate,
+            'endDate' => $this->endDate,
+            'status' => $this->status,
+            'created' => $this->createdAt
+        ];
+    }
 
     public function __get($name)
     {

@@ -24,56 +24,43 @@ class UpdateController extends Controller
      */
     public function updateWork(Request $request, Response $response) : Response
     {
-        $workId = (int) $request->getParam('id');
+        $workId = (int) $request->getParam('workId');
 
         $workBo = new WorkBO($this->c->db);
         if (!$workBo->hasWork($workId)) {
-            throw new NotFoundException($request, $response);
+            $message = Constant::WORK_NOT_EXIST;
         }
 
-        $success = null;
-        $error = null;
-        $notify = null;
-        
-        // Request with POST method
-        if ($request->isPost()) {
-            $validate = $this->validateForm($request->getBodyParams());
-            $notify = $validate['message'];
+        $message = null;
+        $isSuccess = false;
 
-            if ($validate['isOk']) {
-                $safeVariable = $validate['safeVar'];
+        $validate = $this->validateForm($request->getBodyParams());
+        $message = $validate['message'];
 
-                $isSuccess = $workBo->updateWork([
-                    'workId' => $safeVariable['workId'],
-                    'workName' => $safeVariable['workName'],
-                    'startDate' => $safeVariable['startDate'],
-                    'endDate' => $safeVariable['endDate'],
-                    'status' => $safeVariable['status']
-                ]);
+        if ($validate['isOk']) {
+            $safeVariable = $validate['safeVar'];
 
-                if ($isSuccess) {
-                    $success = Constant::UPDATE_SUCCESS;
-                } else {
-                    $error = Constant::UPDATE_FAIL;
-                }
+            $isSuccess = $workBo->updateWork([
+                'workId' => $safeVariable['workId'],
+                'workName' => $safeVariable['workName'],
+                'startDate' => $safeVariable['startDate'],
+                'endDate' => $safeVariable['endDate'],
+                'status' => $safeVariable['status']
+            ]);
+
+            if ($isSuccess) {
+                $message = Constant::UPDATE_SUCCESS;
+            } else {
+                $message = Constant::UPDATE_FAIL;
             }
         }
 
-        $statusBo = new StatusBO();
-        $status = $statusBo->getStatuses();
-        $work = $workBo->getWorkById($workId);
+        $json = json_encode([
+            'result' => $isSuccess,
+            'message' => $message
+        ]);
 
-        return $this->c->view->render(
-            $response,
-            'update.html.php',
-            [
-                'work'      => $work,
-                'status'    => $status,
-                'success'   => $success,
-                'notify'    => $notify,
-                'error'     => $error
-            ]
-        );
+        return $response->withJson($json);
     }
 
     /**
@@ -87,8 +74,11 @@ class UpdateController extends Controller
     public function updateStatus(Request $request, Response $response) : Response
     {
         $message = null;
-        $workId = (int) $request->getBodyParam('id');
+        $isSuccess = false;
+
+        $workId = (int) $request->getBodyParam('workId');
         $status = (int) $request->getBodyParam('status');
+        
         $workBo = new WorkBO($this->c->db);
 
         if ($workBo->hasWork($workId)) {
@@ -103,10 +93,15 @@ class UpdateController extends Controller
                 $message = Constant::UPDATE_STATUS_FAIL;
             }
         } else {
-            throw new NotFoundException($request, $response);
+            $message = Constant::WORK_NOT_EXIST;
         }
 
-        return $response->withJson(json_encode(['message' => $message]));
+        $json = json_encode([
+            'result' => $isSuccess,
+            'message' => $message
+        ]);
+
+        return $response->withJson($json);
     }
 
     /**

@@ -1,5 +1,4 @@
 <?php
-
 require __DIR__ . '/../vendor/autoload.php';
 
 use App\Controller\HomeController;
@@ -19,10 +18,9 @@ $settings = [
 ];
 
 $route = new \Helper\Route\Route($settings);
-
 $container = $route->getContainer();
 
-$container['db'] = function($container) {
+$container['db'] = function ($container) {
     $db = $container->settings['db'];
 
     $pdo = new \PDO(
@@ -36,17 +34,19 @@ $container['db'] = function($container) {
     return $pdo;
 };
 
-$container['view'] = function($container) {
+$container['view'] = function ($container) {
     return new Helper\View\ViewEngine($container->settings['viewPath']);
 };
 
-$route->get('/',                HomeController::class   .'@listWork');
-$route->get('/create',          CreateController::class .'@createWork');
-$route->get('/update',          UpdateController::class .'@updateWork');
+$route->get('/',                HomeController::class   .'@index');
 
-$route->post('/create',         CreateController::class .'@createWork');
-$route->post('/update',         UpdateController::class .'@updateWork');
-$route->post('/change-status',  UpdateController::class .'@updateStatus');
-$route->post('/delete',         DeleteController::class .'@deleteWork');
+$route->group('/api', function () {
+    $this->get('/works',        HomeController::class   .'@fetchWorks');
+    $this->get('/work',         HomeController::class   .'@fetchWork');
+    $this->post('/work',        CreateController::class .'@createWork');
+    $this->put('/work',         UpdateController::class .'@updateWork');
+    $this->patch('/work',       UpdateController::class .'@updateStatus');
+    $this->delete('/work',      DeleteController::class .'@deleteWork');
+});
 
 $route->handle();

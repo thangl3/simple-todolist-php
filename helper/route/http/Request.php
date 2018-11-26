@@ -23,18 +23,28 @@ class Request implements RequestInterface
         $this->method = $this->environment->get('REQUEST_METHOD');
         $this->requestUri = $this->environment->get('REQUEST_URI');
         $this->extractUri = parse_url('http://abc.abc' .$this->requestUri, PHP_URL_PATH);
-        $this->bodyParams = $_POST;
-        $this->queryParams = $_GET;
+
+        if (empty($_POST)) {
+            $this->bodyParams = json_decode(file_get_contents("php://input"), true);
+        } else {
+            $this->bodyParams = $_POST;
+        }
+
+        if (empty($_GET)) {
+            $this->queryParams = explode('=', parse_url('http://abc.abc' .$this->requestUri, PHP_URL_QUERY));
+        } else {
+            $this->queryParams = $_GET;
+        }
     }
 
     public function isPost() : bool
     {
-        return $this->method === Method::$POST;
+        return $this->method === Method::POST;
     }
 
     public function isGet() : bool
     {
-        return $this->method === Method::$GET;
+        return $this->method === Method::GET;
     }
 
     /**
@@ -54,12 +64,12 @@ class Request implements RequestInterface
 
     public function setIsPostMethod()
     {
-        $this->setMethod(Method::$POST);
+        $this->setMethod(Method::POST);
     }
 
     public function setIsGetMethod()
     {
-        $this->setMethod(Method::$GET);
+        $this->setMethod(Method::GET);
     }
 
     /**
@@ -69,17 +79,13 @@ class Request implements RequestInterface
      */
     public function getBodyParams() : array
     {
-        if ($this->isPost()) {
-            $params = [];
+        $params = [];
 
-            foreach($this->bodyParams as $key => $value) {
-                $params[$key] = filter_var($value, FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
-            }
-
-            return $params;
+        foreach($this->bodyParams as $key => $value) {
+            $params[$key] = filter_var($value, FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
         }
 
-        return [];
+        return $params;
     }
 
     /**
@@ -90,10 +96,8 @@ class Request implements RequestInterface
      */
     public function getBodyParam(string $key) : string
     {
-        if ($this->isPost()) {
-            if (isset($this->bodyParams[$key])) {
-                return filter_var($this->bodyParams[$key], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
-            }
+        if (isset($this->bodyParams[$key])) {
+            return filter_var($this->bodyParams[$key], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
         }
 
         return '';
@@ -106,17 +110,13 @@ class Request implements RequestInterface
      */
     public function getQueryParams() : array
     {
-        if ($this->isGet()) {
-            $params = [];
+        $params = [];
 
-            foreach($this->queryParams as $key => $value) {
-                $params[$key] = filter_var($value, FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
-            }
-
-            return $params;
+        foreach($this->queryParams as $key => $value) {
+            $params[$key] = filter_var($value, FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
         }
 
-        return [];
+        return $params;
     }
 
     /**
@@ -127,10 +127,8 @@ class Request implements RequestInterface
      */
     public function getQueryParam(string $key) : string
     {
-        if ($this->isGet()) {
-            if (isset($this->queryParams[$key])) {
-                return filter_var($this->queryParams[$key], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
-            }
+        if (isset($this->queryParams[$key])) {
+            return filter_var($this->queryParams[$key], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
         }
 
         return '';

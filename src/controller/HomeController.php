@@ -16,7 +16,15 @@ class HomeController extends Controller
      * @param Response $response
      * @return Response
      */
-    public function listWork(Request $request, Response $response) : Response
+    public function index(Request $request, Response $response) : Response
+    {
+        return $this->c->view->render(
+            $response,
+            'home.html.php'
+        );
+    }
+
+    public function fetchWorks(Request $request, Response $response) : Response
     {
         $statusBo = new StatusBO();
         $workBo = new WorkBO($this->c->db);
@@ -24,13 +32,29 @@ class HomeController extends Controller
         $status = $statusBo->getStatuses();
         $works = $workBo->getWorks();
 
-        return $this->c->view->render(
-            $response,
-            'home.html.php',
-            [
-                'works'     => $works,
-                'status'    => $status
-            ]
-        );
+        $json = json_encode([
+            'works' => $works,
+            'status' => $status
+        ]);
+
+        return $response->withJson($json);
+    }
+
+    public function fetchWork(Request $request, Response $response) : Response
+    {
+        $workId = (int) $request->getBodyParam('workId');
+
+        $statusBo = new StatusBO();
+        $workBo = new WorkBO($this->c->db);
+
+        $status = $statusBo->getStatuses();
+        $work = $workBo->getWork($workId);
+
+        $json = json_encode([
+            'work' => $work,
+            'status' => $status
+        ]);
+
+        return $response->withJson($json);
     }
 }

@@ -4,12 +4,16 @@ namespace App\Utils;
 class Constant
 {
     const DATETIME_FORMAT = 'Y-m-d';
+
     const CREATE_SUCCESS = 'Create a work success!';
     const CREATE_FAIL = 'Create a work fail!';
+
     const UPDATE_SUCCESS = 'Update the work success!';
     const UPDATE_FAIL = 'Update the work fail!';
+
     const DELETE_SUCCESS = 'Delete a work success!';
     const DELETE_FAIL = 'Delete a work fail!';
+
     const STARTDATE_NOT_VALID = 'Start date not valid, please try again!';
     const ENDDATE_NOT_VALID = 'End date not valid, please try again!';
     const UPDATE_STATUS_SUCCESS = 'Update status success!';
@@ -18,4 +22,6 @@ class Constant
     const END_DATE_LOWER_THAN_CURRENT = 'Please choose the end date BIGGER or equal with today';
     const INVALID_WORKNAME = 'Please enter the work name';
     const INVALID_DATE = 'Your date is wrong format';
+
+    const WORK_NOT_EXIST = 'Work not exist, please try again!';
 }

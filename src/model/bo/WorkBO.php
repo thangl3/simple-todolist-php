@@ -19,64 +19,46 @@ class WorkBO
         return $this->workDao->has($workId);
     }
 
-    /**
-     * Fetch one work by id
-     *
-     * @param integer $workId
-     * @return Work
-     */
-    public function getWorkById(int $workId) : Work
+    public function getWork(int $workId) : Work
     {
         $dataArray = $this->workDao->select($workId);
 
-        $dataArray['start_date'] =   Util::createDatetime(
+        $dataArray['start_date'] = Util::createDatetime(
             $dataArray['start_day'],
             $dataArray['start_month'],
             $dataArray['start_year']
         );
-        $dataArray['end_date'] =   Util::createDatetime(
+        $dataArray['end_date'] = Util::createDatetime(
             $dataArray['end_day'],
             $dataArray['end_month'],
             $dataArray['end_year']
         );
-        
-        return new Work($dataArray);
+
+        return (new Work($dataArray))->toArray();
     }
 
-    /**
-     * Fetch all of work in database to 1 array
-     *
-     * @return array
-     */
     public function getWorks() : array
     {
         $rawData = $this->workDao->selectAll();
         $works = [];
 
         foreach ($rawData as $key => $dataArray) {
-            $dataArray['start_date'] =   Util::createDatetime(
+            $dataArray['start_date']  = Util::createDatetime(
                                             $dataArray['start_day'],
                                             $dataArray['start_month'],
                                             $dataArray['start_year']
                                         );
-            $dataArray['end_date'] =   Util::createDatetime(
+            $dataArray['end_date']    = Util::createDatetime(
                                             $dataArray['end_day'],
                                             $dataArray['end_month'],
                                             $dataArray['end_year']
                                         );
-            array_push($works, new Work($dataArray));
+            array_push($works, (new Work($dataArray))->toArray());
         }
 
         return $works;
     }
 
-    /**
-     * Create a work with data from user
-     * Return the id was inserted
-     *
-     * @param array $dataWork
-     * @return integer
-     */
     public function createWork(array $dataWork) : int
     {
         $statusBo = new StatusBO();
@@ -97,12 +79,6 @@ class WorkBO
         return $this->workDao->create($work);
     }
 
-    /**
-     * Update a work and return true if sucess or false
-     *
-     * @param array $dataWork
-     * @return boolean
-     */
     public function updateWork(array $dataWork) : bool
     {
         $statusBo = new StatusBO();
@@ -117,7 +93,7 @@ class WorkBO
             $work->startMonth = $startDate['month'];
             $work->startYear = $startDate['year'];
             $work->endDay = $endDate['day'];
-            $work->endYear = $endDate['month'];
+            $work->endMonth = $endDate['month'];
             $work->endYear = $endDate['year'];
             $work->status = $dataWork['status'];
 
@@ -142,12 +118,6 @@ class WorkBO
         return false;
     }
 
-    /**
-     * Delete a work and return true if sucess or false
-     *
-     * @param integer $workId
-     * @return boolean
-     */
     public function deleteWork(int $workId) : bool
     {
         return $this->workDao->delete($workId) === 1;

@@ -6,6 +6,7 @@ use Helper\Route\Exception\NotFoundException;
 class Router
 {
     private $routes = [];
+    private $groupPattern;
     private $container;
 
     public function __construct(ContainerInterface $container)
@@ -15,7 +16,23 @@ class Router
 
     public function addRoute(string $method, string $pattern, callable $callback)
     {
+        if ($this->getGroupPattern() !== null) {
+            $pattern = $this->getGroupPattern() .$pattern;
+        }
+
         $this->routes[$method][$pattern] = $callback;
+    }
+
+    public function createGroup(string $pattern, callable $callable)
+    {
+        $this->setGroupPattern($pattern);
+
+        return new RouteGroup($pattern, $callable);
+    }
+
+    public function flushGroup()
+    {
+        $this->setGroupPattern(null);
     }
 
     public function getRoutes(string $method)
@@ -26,6 +43,16 @@ class Router
     public function setContainer(ContainerInterface $container)
     {
         $this->container = $container;
+    }
+
+    public function setGroupPattern($pattern)
+    {
+        $this->groupPattern = $pattern;
+    }
+
+    public function getGroupPattern()
+    {
+        return $this->groupPattern;
     }
 
     public function lookupRoute(string $method, string $pattern)

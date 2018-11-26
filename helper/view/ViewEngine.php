@@ -6,7 +6,7 @@ use Helper\Route\Http\ResponseInterface;
 
 class ViewEngine
 {
-    private $basePath = DIRECTORY_SEPARATOR;
+    private $basePath;
 
     public function __construct(string $basePath)
     {
@@ -31,17 +31,10 @@ class ViewEngine
             throw new RuntimeException(sprintf('Wrong path to the template. Your path is: %s', $fileView));
         }
 
-        $extractOutputView = function () use($fileView, $data) {
+        $extractOutputView = function () use ($fileView, $data) {
             extract($data);
 
-            // Compress content before print to client
-            ob_start(function ($buffer) {
-                // remove comments
-                $buffer = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $buffer);
-                // remove tabs, spaces, newlines, etc.
-                $buffer = str_replace(array("\r\n", "\r", "\n", "\t", '  ', '    ', '    '), '', $buffer);
-                return $buffer;
-            });
+            ob_start();
 
             include $fileView;
 
