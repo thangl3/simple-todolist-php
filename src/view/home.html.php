@@ -213,11 +213,11 @@
                                 :key="work.workId"
                                 :class="['work', { completed: work.status == 3 }]">
 
-                                <div class="edit-area hide" v-on:dblclick="switchArea">
+                                <div class="edit-area hide">
                                     <div class="cancel-edit">
                                         <button type="button" v-on:click="switchArea" class="btn btn-cancel">Cancel</button>
                                     </div>
-                                    <div class="edit">
+                                    <div class="edit" v-on:dblclick="switchArea">
                                         <input type="text" v-model.trim="work.workName">
                                         <div class="information mt-2">
                                             <div class="date mr-3">
@@ -243,13 +243,13 @@
                                     </div>
                                 </div>
 
-                                <div class="view-area show" v-on:dblclick="switchArea">
+                                <div class="view-area show">
                                     <div class="mark-complete" v-on:click="markCompleteWork($event, work)">
                                         <input type="checkbox" class="toggle"
                                             :checked="work.status == 3"/>
                                         <label></label>
                                     </div>
-                                    <div class="view">
+                                    <div class="view" v-on:dblclick="switchArea">
                                         <div>
                                             <label>{{ work.workName }}</label>
                                         </div>
