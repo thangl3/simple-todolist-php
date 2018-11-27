@@ -1,0 +1,191 @@
+/******************************************************
+Style item work `repeat`
+******************************************************/
+.works-panel .list li {
+    position: relative;
+    font-size: 1.2rem;
+    padding: 1.3rem 0;
+    border-bottom: 1px solid #ededed;
+    list-style: none;
+}
+
+.works-panel .list li:last-child {
+    border-bottom: none;
+}
+
+.works-panel .list li .edit-area,
+.works-panel .list li .view-area {
+    display: flex;
+}
+
+.works-panel .list li .view-area .options {
+    margin-right: 0;
+    margin-left: auto;
+    align-self: flex-end;
+}
+
+@media screen and (max-width: 576px) {
+    .options {
+        top: .95rem;
+        right: 0;
+        position: absolute;
+    }
+}
+
+/***************************************************
+    Mark complete
+****************************************************/
+.works-panel .list li .view-area .mark-complete {
+    display: flex;
+    align-self: center;
+}
+.works-panel .list li .view-area .mark-complete label {
+    padding: 1rem 1rem 1rem 2.5rem;
+    transition: color 0.4s;
+}
+.works-panel .list li .view-area .mark-complete .toggle {
+    text-align: center;
+    width: 2.2rem;
+    height: auto;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto 0;
+    -webkit-appearance: none;
+    appearance: none;
+}
+.works-panel .list li .view-area .mark-complete .toggle {
+    opacity: 0;
+}
+.works-panel .list li .view-area .mark-complete .toggle + label {
+    background-image: url('data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%22-10%20-18%20100%20135%22%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2250%22%20fill%3D%22none%22%20stroke%3D%22%23ededed%22%20stroke-width%3D%223%22/%3E%3C/svg%3E');
+    background-repeat: no-repeat;
+    background-position: center left;
+}
+.works-panel .list li .view-area .mark-complete .toggle:checked + label {
+    background-image: url('data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%22-10%20-18%20100%20135%22%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2250%22%20fill%3D%22none%22%20stroke%3D%22%23bddad5%22%20stroke-width%3D%223%22/%3E%3Cpath%20fill%3D%22%235dc2af%22%20d%3D%22M72%2025L42%2071%2027%2056l-4%204%2020%2020%2034-52z%22/%3E%3C/svg%3E');
+}
+
+.works-panel .work.completed .view-area .view label,
+.works-panel .work.completed .view-area .view .information .date {
+    text-decoration: line-through;
+}
+
+/******************************************************
+End mark complete
+******************************************************/
+
+
+/******************************************************
+View area
+******************************************************/
+.works-panel .list li .view-area label {
+    line-height: 1.2;
+    margin-bottom: unset;
+    transition: color 0.4s;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.information {
+    display: flex;
+    /* align-items: flex-end;
+    justify-content: flex-end; */
+    color: #a5a5a5;
+    font-weight: 500;
+}
+
+.information span {
+    font-size: .95rem;
+}
+
+/*********************************
+Edit area
+**********************************/
+.work .edit-area .edit input,
+.work .edit-area .edit select {
+    -webkit-appearance: none;
+    outline: none;
+    font-size: 1.2rem;
+    border-radius: .1rem;
+    border: 0;
+    width: 100%;
+    border-bottom: 1px solid #9c9898;
+}
+
+.work .edit-area .edit .information input,
+.work .edit-area .edit .information select {
+    /* border: 1px solid #cecece; */
+    font-size: 1rem;
+}
+
+.work .edit-area .edit .information label {
+    line-height: 1.5rem;
+}
+
+.work .edit-area .edit .information select {
+    line-height: 1.6rem;
+}
+
+.work .edit-area .edit .information label {
+    font-size: 1rem;
+    width: 100%;
+}
+
+.work .edit-area .cancel-edit {
+    display: flex;
+}
+
+.work .edit-area .btn {
+    outline: none;
+    width: 4.5rem;
+    height: 100%;
+    border-radius: 0;
+    font-weight: 500;
+    color: white;
+    text-align: center;
+    font-size: 1rem;
+}
+
+.work .edit-area .submit-edit .btn.btn-edit {
+    margin-left: .5rem;
+    background-color: limegreen;
+}
+
+.work .edit-area .cancel-edit .btn.btn-cancel {
+    margin-right: .5rem;
+    /* border-radius: 50%;
+    height: 50%;
+    width: 3.3rem;
+    align-self: center; */
+    background-color: orangered;
+}
+
+.select-week {
+    align-items: center;
+}
+
+.select-week .select {
+    margin-bottom: unset;
+}
+
+/*********************************
+common
+**********************************/
+.flex {
+    display: flex;
+}
+.hide {
+    display: none !important;
+}
+.show {
+    display: block;
+}
+
+.disabled, .disabled > * {
+    pointer-events: none;
+}
+
+[v-cloak] {
+    display: none;
+}
