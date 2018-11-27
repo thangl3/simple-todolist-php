@@ -184,101 +184,104 @@
                 <section>
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#all">All</a>
+                        <a :class="['nav-link', { active : hashFilter === 'all'}]" href="#all">All</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#today">Today</a>
+                        <a :class="['nav-link', { active : hashFilter === 'today'}]" href="#today">Today</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#week">Week</a>
+                        <a :class="['nav-link', { active : hashFilter === 'week'}]" href="#week">Week</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#month">Month</a>
+                        <a :class="['nav-link', { active : hashFilter === 'month'}]" href="#month">Month</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#month">Completed</a>
+                        <a :class="['nav-link', { active : hashFilter === 'completed'}]" href="#completed">Completed</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#month">Doing</a>
+                        <a :class="['nav-link', { active : hashFilter === 'doing'}]" href="#doing">Doing</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#month">Plaining</a>
+                        <a :class="['nav-link', { active : hashFilter === 'plaining'}]" href="#plaining">Plaining</a>
                     </li>
                 </ul>
                 </section>
-                <section class="works-panel" v-show="works.length">
-                    <ul class="list">
-                        <li v-for="(work, index) in works"
-                            :key="work.workId"
-                            :class="work.status == 3 ? 'work completed' : 'work'">
+                <section class="works-panel">
+                    <div v-if="filteredWorks">
+                        <ul class="list" v-show="filteredWorks.length">
+                            <li v-for="work in filteredWorks"
+                                :key="work.workId"
+                                :class="['work', { completed: work.status == 3 }]">
 
-                            <div class="edit-area hide">
-                                <div class="cancel-edit">
-                                    <button type="button" v-on:click="switchArea" class="btn btn-cancel">Cancel</button>
-                                </div>
-                                <div class="edit">
-                                    <input type="text" v-model="work.workName">
-                                    <div class="information mt-2">
-                                        <div class="date mr-3">
-                                            <label>Start </label>
-                                            <input type="date" v-model="work.startDate">
-                                        </div>
-                                        <div class="date mr-3">
-                                            <label>Dealine </label>
-                                            <input type="date" v-model="work.endDate">
-                                        </div>
-                                        <div class="status">
-                                            <label>Status </label>
-                                            <select v-model="work.status">
-                                                <option :value="key" v-for="(status, key) in statuses" :key="key">
-                                                    {{ status }}
-                                                </option>
-                                            </select>
+                                <div class="edit-area hide" v-on:dblclick="switchArea">
+                                    <div class="cancel-edit">
+                                        <button type="button" v-on:click="switchArea" class="btn btn-cancel">Cancel</button>
+                                    </div>
+                                    <div class="edit">
+                                        <input type="text" v-model.trim="work.workName">
+                                        <div class="information mt-2">
+                                            <div class="date mr-3">
+                                                <label>Start </label>
+                                                <input type="date" v-model="work.startDate">
+                                            </div>
+                                            <div class="date mr-3">
+                                                <label>Dealine </label>
+                                                <input type="date" v-model="work.endDate">
+                                            </div>
+                                            <div class="status">
+                                                <label>Status </label>
+                                                <select v-model="work.status">
+                                                    <option :value="key" :key="key" v-for="(status, key) in statuses">
+                                                        {{ status }}
+                                                    </option>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
+                                    <div class="submit-edit">
+                                        <button type="button" v-on:click="editWork($event, work)" class="btn btn-edit">Edit</button>
+                                    </div>
                                 </div>
-                                <div class="submit-edit">
-                                    <button type="button" v-on:click="editWork($event, work, index)" class="btn btn-edit">Edit</button>
-                                </div>
-                            </div>
 
-                            <div class="view-area show">
-                                <div class="mark-complete">
-                                    <input type="checkbox" class="toggle"
-                                        v-on:change="markCompleteWork($event, index)"
-                                        :checked="work.status == 3"/>
-                                    <label></label>
-                                </div>
-                                <div class="view">
-                                    <div>
-                                        <label>{{ work.workName }}</label>
+                                <div class="view-area show" v-on:dblclick="switchArea">
+                                    <div class="mark-complete" v-on:click="markCompleteWork($event, work)">
+                                        <input type="checkbox" class="toggle"
+                                            :checked="work.status == 3"/>
+                                        <label></label>
                                     </div>
-                                    <div class="information mt-2">
-                                        <div class="date mr-3">
-                                            <span>Start: </span>
-                                            <span>{{ work.startDate }}</span>
+                                    <div class="view">
+                                        <div>
+                                            <label>{{ work.workName }}</label>
                                         </div>
-                                        <div class="date mr-3">
-                                            <span>Dealine: </span>
-                                            <span>{{ work.endDate }}</span>
-                                        </div>
-                                        <div class="status">
-                                            <span>{{ statuses[work.status] }}</span>
+                                        <div class="information mt-2">
+                                            <div class="date mr-3">
+                                                <span>Start: </span>
+                                                <span>{{ work.startDate }}</span>
+                                            </div>
+                                            <div class="date mr-3">
+                                                <span>Dealine: </span>
+                                                <span>{{ work.endDate }}</span>
+                                            </div>
+                                            <div class="status">
+                                                <span>{{ statuses[work.status] }}</span>
+                                            </div>
                                         </div>
                                     </div>
+                                    <div class="options">
+                                        <a href="#" v-on:click.stop.prevent="switchArea">
+                                            <i class="far fa-edit"></i>
+                                        </a>
+                                        <a href="#" v-on:click.stop.prevent="deleteWork($event, work)">
+                                            <i class="far fa-trash-alt" ></i>
+                                        </a>
+                                    </div>
                                 </div>
-                                <div class="options">
-                                    <a href="#" v-on:click.stop.prevent="switchArea">
-                                        <i class="far fa-edit"></i>
-                                    </a>
-                                    <a href="#" v-on:click.stop.prevent="deleteWork($event, work.workId, index)">
-                                        <i class="far fa-trash-alt" ></i>
-                                    </a>
-                                    <!-- <input class="edit" type="text" v-model="work.workName"> -->
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <div v-else>
+                    
+                    </div>
                 </section>
             </div>
             <div class="col-md-4 col-12">
@@ -286,22 +289,21 @@
                     <div class="form-group">
                         <label for="workNameInput">Work name</label>
                         <input type="text"
-                            autofocus autocomplete="on"
                             class="form-control"
                             placeholder="Hey, enter your work here"
-                            v-model="work.workName" />
+                            v-model.trim="workName" />
                     </div>
                     <div class="form-group">
                         <label for="startDateInput">Start date</label>
                         <input type="date"
                             class="form-control"
-                            v-model="work.startDate"/>
+                            v-model="startDate"/>
                     </div>
                     <div class="form-group">
                         <label for="endDateInput">End date</label>
                         <input type="date"
                             class="form-control"
-                            v-model="work.endDate">
+                            v-model="endDate">
                     </div>
                     <button type="submit"
                         class="btn btn-primary float-right"
@@ -317,7 +319,10 @@
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js"></script>
+<script src="/assets/date-helper.js"></script>
 <script>
+    const COMMON_ERROR = 'Please try again or later'
+
     $.notify.defaults({
         style: 'bootstrap',
         position: 'top center',
@@ -325,63 +330,39 @@
         arrowSize: 200
     })
 
-    const COMMON_ERROR = 'Please try again or later'
-
     let http = axios.create({
         baseURL: '/api'
     })
 
-    let hashFilters = {
-        today : 'today',
-        week : 'week',
-        month : 'month',
-        all : function(works) {
-            return works
-        },
-        plaining : function(works) {
-            return works.filter(work => {
-                return work.status == 1
-            })
-        },
-        doing : function(works) {
-            return works.filter(work => {
-                return work.status == 2
-            })
-        },
-        completed : function(works) {
-            return works.filter(work => {
-                return work.status == 3
-            })
-        }
-    }
-
     let todo = new Vue({
         el: '#todo',
         data: {
-            works: [],
+            allWork: [],
             statuses: [],
-            filter: 'all',
-            work: {
-                workName: '',
-                startDate: null,
-                endDate: null
-            }
+            hashFilter: 'all',
+            
+            // for create a new work
+            workName: '',
+            startDate: null,
+            endDate: null
         },
         watch: {
-            works: {
+            allWork: {
                 handler(value) {
                     return value
                 },
                 deep: true
             }
         },
-        created() {
-            this.fetchWorks();
+        computed: {
+            filteredWorks() {
+                return this[this.hashFilter](this.allWork)
+            }
         },
         methods: {
             fetchWorks() {
                 http.get('/works').then(response => {
-                    this.works = response.data.works
+                    this.allWork = response.data.works
                     this.statuses = response.data.status
                 }).catch(error => {
                     this.notify(COMMON_ERROR, 'error')
@@ -400,6 +381,8 @@
                 })
             },
             switchArea(e) {
+                console.log('switch')
+
                 let viewElement = $(e.target).parents('.work').find('.view-area')
                 let editElement = $(e.target).parents('.work').find('.edit-area')
 
@@ -419,9 +402,9 @@
                     viewElement.addClass('hide')
                 }
             },
-            async editWork(e, work, index) {
+            async editWork(e, work) {
                 let workId      = work.workId
-                let workName    = work.workName && workName.trim()
+                let workName    = work.workName
                 let startDate   = work.startDate
                 let endDate     = work.endDate
                 let status      = work.status
@@ -441,7 +424,7 @@
                 })
 
                 if (response.data.result) {
-                    this.works[index] = work
+                    this.allWork[this.allWork.indexOf(work)] = work
                     this.switchArea(e)
                     this.notify(response.data.message, 'success')
                 } else {
@@ -450,8 +433,10 @@
 
                 $(e.target).removeClass('disabled')
             },
-            async deleteWork(e, workId, index) {
+            async deleteWork(e, work) {
                 $(e.target).addClass('disabled')
+
+                let workId = work.workId
 
                 let response = await http.delete('/work', { params : { workId } })
                     .catch(error => {
@@ -459,7 +444,7 @@
                     })
 
                 if (response.data.result) {
-                    this.works.splice(index, 1)
+                    this.allWork.splice(this.allWork.indexOf(work), 1)
                     this.notify(response.data.message, 'success')
                 } else {
                     $.notify(response.data.message, 'error');
@@ -471,20 +456,25 @@
                 e.preventDefault();
                 $(e.target).addClass('disabled')
 
-                let workName = this.work.workName && this.work.workName.trim()
-
-                if (workName === '') {
+                if (this.workName === '') {
                     this.notify('Please enter the valid work\'s name', 'warn')
                     return false;
                 }
 
-                let response = await http.post('/work', this.work)
-                    .catch(error => {
-                        this.notify(COMMON_ERROR, 'error')
-                    })
+                let response = await http.post('/work', {
+                    workName: this.workName,
+                    startDate: this.startDate,
+                    endDate: this.endDate
+                })
+                .catch(error => {
+                    this.notify(COMMON_ERROR, 'error')
+                })
 
                 if (response.data.result) {
-                    this.works.unshift(response.data.data)
+                    this.allWork.unshift(response.data.data)
+                    this.workName = ''
+                    this.startDate = null
+                    this.endDate = null
                     this.notify(response.data.message, 'success')
                 } else {
                     this.notify(response.data.message, 'error')
@@ -492,54 +482,89 @@
 
                 $(e.target).removeClass('disabled')
             },
-            markCompleteWork(e, index) {
-                let targetClasses = e.target.parentElement.parentElement.classList
+            markCompleteWork(e, work) {
+                //let targetClasses = e.target.parentElement.parentElement.classList
+                let workTarget = $(e.target).parents('.work')
 
-                let work    = this.works[index]
+                let index = this.allWork.indexOf(work)
                 let workId  = work.workId
                 let status  = work.status
 
-                if (targetClasses.contains('completed')) {
+                console.log(workTarget.hasClass('completed'))
+
+                if (workTarget.hasClass('completed')) {
                     status = 2
                     // Fake react very fast
-                    targetClasses.remove('completed')
+                    workTarget.removeClass('completed')
                 } else {
                     status = 3
                     // Fake react very fast
-                    targetClasses.add('completed')
+                    workTarget.addClass('completed')
                 }
 
                 http.patch('/work', { workId, status })
                     .then(response => {
                         if (response.data.result) {
                             if (status == 3) {
-                                this.works[index].status = 3
+                                this.allWork[index].status = 3
                             } else {
-                                this.works[index].status = 2
+                                this.allWork[index].status = 2
                             }
 
                             this.notify(response.data.message, 'success')
                         } else {
-                            targetClasses.remove('completed')
+                            e.target.checked = false
+                            workTarget.removeClass('completed')
                             this.notify(response.data.message, 'error')
                         }
                     })
                     .catch(error => {
-                        targetClasses.remove('completed')
+                        e.target.checked = false
+                        workTarget.removeClass('completed')
                         this.notify(COMMON_ERROR, 'error')
                     })
+            },
+            today() {
+
+            },
+            week() {
+                console.log(new Date('2018-9-32').getWeek())
+            },
+            month() {
+
+            },
+            all() {
+                return this.allWork
+            },
+            plaining() {
+                return this.allWork.filter(work => {
+                    return work.status == 1
+                })
+            },
+            doing() {
+                return this.allWork.filter(work => {
+                    return work.status == 2
+                })
+            },
+            completed() {
+                return this.allWork.filter(work => {
+                    return work.status == 3
+                })
             },
             notify(message, type) {
                 $.notify(message, type);
             }
+        },
+        created() {
+            this.fetchWorks()
         }
     })
 
     function onHashChangeListener() {
-        var hashFilter = window.location.hash.replace(/\#?/, '')
+        let hashFilter = window.location.hash.replace(/\#?/, '')
 
-        if (hashFilters[hashFilter]) {
-            todo.filter = hashFilter
+        if (todo[hashFilter]) {
+            todo.hashFilter = hashFilter
         }
     }
 
