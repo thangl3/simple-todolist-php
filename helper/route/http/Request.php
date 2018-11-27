@@ -25,13 +25,13 @@ class Request implements RequestInterface
         $this->extractUri = parse_url('http://abc.abc' .$this->requestUri, PHP_URL_PATH);
 
         if (empty($_POST)) {
-            $this->bodyParams = json_decode(file_get_contents("php://input"), true);
+            $this->bodyParams = json_decode(file_get_contents("php://input"), true) ?? [];
         } else {
             $this->bodyParams = $_POST;
         }
 
         if (empty($_GET)) {
-            $this->queryParams = explode('=', parse_url('http://abc.abc' .$this->requestUri, PHP_URL_QUERY));
+            $this->queryParams = explode('=', parse_url('http://abc.abc' .$this->requestUri, PHP_URL_QUERY)) ?? [];
         } else {
             $this->queryParams = $_GET;
         }
