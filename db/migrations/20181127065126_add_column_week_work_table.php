@@ -52,9 +52,9 @@ class AddColumnWeekWorkTable extends AbstractMigration
 
         $table = $this->table('work')
                     ->addColumn('start_week', 'integer', ['limit' => 2, 'after' => 'start_day'])
-                    ->addColumn('start_time', 'time', ['after' => 'start_year'])
+                    ->addColumn('start_time', 'time', ['after' => 'start_year', 'null' => true])
                     ->addColumn('end_week', 'integer', ['limit' => 2, 'after' => 'end_day'])
-                    ->addColumn('end_time', 'time', ['after' => 'end_year'])
+                    ->addColumn('end_time', 'time', ['after' => 'end_year', 'null' => true])
                     ->update();
     }
 }
