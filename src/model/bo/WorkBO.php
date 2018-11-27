@@ -40,6 +40,33 @@ class WorkBO
     public function getWorks() : array
     {
         $rawData = $this->workDao->selectAll();
+        return $this->transformRawDataToRealData($rawData);
+    }
+
+    public function getWorksHasWeekOfYear($week, $year) : array
+    {
+        $rawData = $this->workDao->selectWorkHasWeekOfYear($week, $year);
+
+        return $this->transformRawDataToRealData($rawData);
+    }
+
+    public function getWorksHasMonthOfYear($month, $year) : array
+    {
+        $rawData = $this->workDao->selectWorkHasMonthOfYear($month, $year);
+
+        return $this->transformRawDataToRealData($rawData);
+    }
+
+    public function getWorksToday($today) : array
+    {
+        $today = Util::extractDatetime($today);
+        $rawData = $this->workDao->selectWorkToday($today['day'], $today['month'], $today['year']);
+
+        return $this->transformRawDataToRealData($rawData);
+    }
+
+    public function transformRawDataToRealData(array $rawData) : array
+    {
         $works = [];
 
         foreach ($rawData as $key => $dataArray) {

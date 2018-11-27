@@ -44,6 +44,66 @@ class WorkDAO
         );
     }
 
+    public function selectWorkHasWeekOfYear($week, $year) : array
+    {
+        $sql = 'SELECT work_id, work_name, start_day, start_week, start_month, start_year, start_time,
+        end_day, end_week, end_month, end_year, end_time, status, created_at
+                FROM work
+                WHERE
+                    start_week <= :week AND end_week >= :week
+                    AND
+                    start_year <= :year AND end_year >= :year';
+
+        return $this->mapper->fetchRows(
+            $sql,
+            [
+                'week' => $week,
+                'year' => $year
+            ]
+        );
+    }
+
+    public function selectWorkHasMonthOfYear($month, $year) : array
+    {
+        $sql = 'SELECT work_id, work_name, start_day, start_week, start_month, start_year, start_time,
+        end_day, end_week, end_month, end_year, end_time, status, created_at
+                FROM work
+                WHERE
+                    start_month <= :month AND end_month >= :month
+                    AND
+                    start_year <= :year AND end_year >= :year';
+
+        return $this->mapper->fetchRows(
+            $sql,
+            [
+                'month' => $month,
+                'year' => $year
+            ]
+        );
+    }
+
+    public function selectWorkToday($day, $month, $year) : array
+    {
+        $sql = 'SELECT work_id, work_name, start_day, start_week, start_month, start_year, start_time,
+        end_day, end_week, end_month, end_year, end_time, status, created_at
+                FROM work
+                WHERE
+                    start_day <= :day  AND end_day >= :day
+                    AND
+                    start_month <= :month AND end_month >= :month
+                    AND
+                    start_year <= :year AND end_year >= :year';
+
+        return $this->mapper->fetchRows(
+            $sql,
+            [
+                'day' => $day,
+                'month' => $month,
+                'year' => $year
+            ]
+        );
+    }
+
     public function selectAll() : array
     {
         $sql = 'SELECT work_id, work_name, start_day, start_week, start_month, start_year, start_time,
