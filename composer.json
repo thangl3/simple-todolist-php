@@ -10,7 +10,11 @@
         }
     ],
     "scripts": {
-        "dev": "start C:/xampp/mysql_start.bat & php -S localhost:7777 -t public",
+        "dev": [
+            "start C:/xampp/mysql_start.bat",
+            "start \"\" \"http://localhost:7777\"",
+            "php -S localhost:7777 -t public"
+        ],
         "test" : "vendor\\bin\\phpunit tests"
     },
     "require": {
