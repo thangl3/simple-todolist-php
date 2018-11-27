@@ -6,11 +6,15 @@ class Work
 	private $workId;
     private $workName;
     private $startDay;
+    private $startWeek;
     private $startMonth;
     private $startYear;
+    private $startTime;
     private $endDay;
+    private $endWeek;
     private $endMonth;
     private $endYear;
+    private $endTime;
     private $status;
     private $createdAt;
     private $updatedAt;
@@ -37,6 +41,10 @@ class Work
             $this->startDay = $data['start_day'];
         }
 
+        if (isset($data['start_week'])) {
+            $this->startWeek = $data['start_week'];
+        }
+
         if (isset($data['start_month'])) {
             $this->startMonth = $data['start_month'];
         }
@@ -45,8 +53,16 @@ class Work
             $this->startYear = $data['start_year'];
         }
 
+        if (isset($data['start_time'])) {
+            $this->startTime = $data['start_time'];
+        }
+
         if (isset($data['end_day'])) {
             $this->endDay = $data['end_day'];
+        }
+
+        if (isset($data['end_week'])) {
+            $this->endWeek = $data['end_week'];
         }
 
         if (isset($data['end_month'])) {
@@ -55,6 +71,10 @@ class Work
 
         if (isset($data['end_year'])) {
             $this->endYear = $data['end_year'];
+        }
+
+        if (isset($data['end_time'])) {
+            $this->endTime = $data['end_time'];
         }
 
         if (isset($data['start_date'])) {
@@ -88,7 +108,11 @@ class Work
             'workId' => $this->workId,
             'workName' => $this->workName,
             'startDate' => $this->startDate,
+            'startWeek' => $this->startWeek,
+            'startTime' => $this->startTime,
             'endDate' => $this->endDate,
+            'endWeek' => $this->endWeek,
+            'endTime' => $this->endTime,
             'status' => $this->status,
             'created' => $this->createdAt
         ];

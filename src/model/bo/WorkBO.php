@@ -67,14 +67,16 @@ class WorkBO
 
         $work = new Work();
 
-        $work->workName = $dataWork['workName'];
-        $work->startDay = $startDate['day'];
-        $work->startMonth = $startDate['month'];
-        $work->startYear = $startDate['year'];
-        $work->endDay = $endDate['day'];
-        $work->endMonth = $endDate['month'];
-        $work->endYear = $endDate['year'];
-        $work->status = 1;
+        $work->workName     = $dataWork['workName'];
+        $work->startDay     = $startDate['day'];
+        $work->startWeek    = $startDate['week'];
+        $work->startMonth   = $startDate['month'];
+        $work->startYear    = $startDate['year'];
+        $work->endDay       = $endDate['day'];
+        $work->endWeek      = $endDate['week'];
+        $work->endMonth     = $endDate['month'];
+        $work->endYear      = $endDate['year'];
+        $work->status       = 1;
 
         return $this->workDao->create($work);
     }
@@ -87,15 +89,17 @@ class WorkBO
 
         if ($statusBo->isValidStatus($dataWork['status'])) {
             $work = new Work();
-            $work->workId = $dataWork['workId'];
-            $work->workName = $dataWork['workName'];
-            $work->startDay = $startDate['day'];
-            $work->startMonth = $startDate['month'];
-            $work->startYear = $startDate['year'];
-            $work->endDay = $endDate['day'];
-            $work->endMonth = $endDate['month'];
-            $work->endYear = $endDate['year'];
-            $work->status = $dataWork['status'];
+            $work->workId       = $dataWork['workId'];
+            $work->workName     = $dataWork['workName'];
+            $work->startDay     = $startDate['day'];
+            $work->startWeek    = $startDate['week'];
+            $work->startMonth   = $startDate['month'];
+            $work->startYear    = $startDate['year'];
+            $work->endDay       = $endDate['day'];
+            $work->endWeek      = $endDate['week'];
+            $work->endMonth     = $endDate['month'];
+            $work->endYear      = $endDate['year'];
+            $work->status       = $dataWork['status'];
 
             return $this->workDao->update($work) === 1;
         }

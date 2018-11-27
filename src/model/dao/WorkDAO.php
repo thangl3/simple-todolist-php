@@ -31,7 +31,8 @@ class WorkDAO
 
     public function select(int $workId) : array
     {
-        $sql = 'SELECT work_id, work_name, start_day, start_month, start_year, end_day, end_month, end_year, status, created_at
+        $sql = 'SELECT work_id, work_name, start_day, start_week, start_month, start_year, start_time,
+        end_day, end_week, end_month, end_year, end_time, status, created_at
                 FROM work
                 WHERE work_id = :workId';
 
@@ -45,8 +46,8 @@ class WorkDAO
 
     public function selectAll() : array
     {
-        $sql = 'SELECT work_id, work_name, start_day, start_month, start_year, end_day, end_month,
-                    end_year, status, created_at
+        $sql = 'SELECT work_id, work_name, start_day, start_week, start_month, start_year, start_time,
+                        end_day, end_week, end_month, end_year, end_time, status, created_at
                 FROM work ORDER BY work_id DESC';
 
         return $this->mapper->fetchRows(
@@ -57,20 +58,26 @@ class WorkDAO
     public function create(Work $work) : int
     {
          $sql = 'INSERT INTO work
-            (work_name, start_day, start_month, start_year, end_day, end_month, end_year, status)
+            (work_name, start_day, start_week, start_month, start_year, start_time, end_day, end_week,
+                end_month, end_year, end_time, status)
             VALUES
-            (:workName, :startDay, :startMonth, :startYear, :endDay, :endMonth, :endYear, :status)';
+            (:workName, :startDay, :startWeek, :startMonth, :startYear, :startTime, :endDay, :endWeek,
+                :endMonth, :endYear, :endTime, :status)';
 
         return $this->mapper->insert(
             $sql,
             [
                 'workName'  => $work->workName,
                 'startDay' => $work->startDay,
+                'startWeek' =>$work->startWeek,
                 'startMonth' => $work->startMonth,
                 'startYear' => $work->startYear,
+                'startTime' =>$work->startTime,
                 'endDay'   => $work->endDay,
+                'endWeek' =>$work->endWeek,
                 'endMonth' => $work->endMonth,
                 'endYear' => $work->endYear,
+                'endTime' =>$work->endTime,
                 'status'    => $work->status,
             ]
         );
@@ -81,11 +88,15 @@ class WorkDAO
         $sql = 'UPDATE work
             SET work_name   = :workName,
                 start_day   = :startDay,
+                start_week  = :startWeek,
                 start_month = :startMonth,
                 start_year  = :startYear,
+                start_time  = :startTime,
                 end_day     = :endDay,
+                end_week    = :endWeek,
                 end_month   = :endMonth,
                 end_year    = :endYear,
+                end_time    = :endTime,
                 status      = :status
             WHERE work_id   = :workId';
 
@@ -95,11 +106,15 @@ class WorkDAO
                 'workId'    => $work->workId,
                 'workName'  => $work->workName,
                 'startDay' => $work->startDay,
+                'startWeek' =>$work->startWeek,
                 'startMonth' => $work->startMonth,
                 'startYear' => $work->startYear,
+                'startTime' =>$work->startTime,
                 'endDay'   => $work->endDay,
+                'endWeek' =>$work->endWeek,
                 'endMonth' => $work->endMonth,
                 'endYear' => $work->endYear,
+                'endTime' =>$work->endTime,
                 'status'    => $work->status,
             ]
         );
