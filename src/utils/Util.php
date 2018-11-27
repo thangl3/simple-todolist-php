@@ -15,7 +15,9 @@ final class Util
             return [
                 'day' => date('d', $timestamp),
                 'month' => date('m', $timestamp),
-                'year' => date('Y', $timestamp)
+                'year' => date('Y', $timestamp),
+                'week' => date('W', $timestamp),
+                'time' => date('H:i', $timestamp)
             ];
         }
 
