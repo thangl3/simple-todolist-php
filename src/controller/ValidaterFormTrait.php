@@ -79,11 +79,7 @@ trait ValidaterFormTrait
      */
     public function isNotValidStartAndEndDate($startDate, $endDate)
     {
-        if (Util::isWrongDateFormat($startDate) || Util::isWrongDateFormat($endDate)) {
-            return true;
-        }
-
-        return false;
+        return Util::isWrongDateFormat($startDate) || Util::isWrongDateFormat($endDate);
     }
 
     /**

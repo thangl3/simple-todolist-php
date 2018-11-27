@@ -43,6 +43,9 @@ $route->get('/',                HomeController::class   .'@index');
 $route->group('/api', function () {
     $this->get('/works',        HomeController::class   .'@fetchWorks');
     $this->get('/work',         HomeController::class   .'@fetchWork');
+    $this->get('/works-today',  HomeController::class   .'@fetchWorksToday');
+    $this->get('/works-week',   HomeController::class   .'@fetchWorksHasWeekOfYear');
+    $this->get('/works-month',  HomeController::class   .'@fetchWorksHasMonthOfYear');
     $this->post('/work',        CreateController::class .'@createWork');
     $this->put('/work',         UpdateController::class .'@updateWork');
     $this->patch('/work',       UpdateController::class .'@updateStatus');
