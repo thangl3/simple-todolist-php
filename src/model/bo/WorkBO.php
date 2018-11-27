@@ -23,12 +23,12 @@ class WorkBO
     {
         $dataArray = $this->workDao->select($workId);
 
-        $dataArray['start_date'] = Util::createDatetime(
+        $dataArray['start_date'] = Util::createDate(
             $dataArray['start_day'],
             $dataArray['start_month'],
             $dataArray['start_year']
         );
-        $dataArray['end_date'] = Util::createDatetime(
+        $dataArray['end_date'] = Util::createDate(
             $dataArray['end_day'],
             $dataArray['end_month'],
             $dataArray['end_year']
@@ -43,12 +43,12 @@ class WorkBO
         $works = [];
 
         foreach ($rawData as $key => $dataArray) {
-            $dataArray['start_date']  = Util::createDatetime(
+            $dataArray['start_date']  = Util::createDate(
                                             $dataArray['start_day'],
                                             $dataArray['start_month'],
                                             $dataArray['start_year']
                                         );
-            $dataArray['end_date']    = Util::createDatetime(
+            $dataArray['end_date']    = Util::createDate(
                                             $dataArray['end_day'],
                                             $dataArray['end_month'],
                                             $dataArray['end_year']

@@ -39,7 +39,7 @@ final class Util
      * @param int|string $year
      * @return string
      */
-    final public static function createDatetime($day, $month, $year) : string
+    final public static function createDate($day, $month, $year) : string
     {
         if (($timestamp = strtotime("$year/$month/$day")) !== false) {
             return date(Constant::DATETIME_FORMAT, $timestamp);
