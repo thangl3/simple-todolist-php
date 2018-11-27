@@ -38,7 +38,7 @@ class UpdateController extends Controller
         $message = $validate['message'];
 
         if ($validate['isOk']) {
-            $safeVariable = $validate['safeVar'];
+            $safeVariable = $validate['safeVariable'];
 
             $isSuccess = $workBo->updateWork([
                 'workId' => $safeVariable['workId'],

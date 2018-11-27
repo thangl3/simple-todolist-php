@@ -22,14 +22,14 @@ class CreateController extends Controller
     {
         $message = null;
         $isSuccess = false;
-        $data = null;
+        $dataInserted = null;
 
         $validate = $this->validateForm($request->getBodyParams());
         $message = $validate['message'];
 
         if ($validate['isOk']) {
             $workBo = new WorkBO($this->c->db);
-            $safeVariable = $validate['safeVar'];
+            $safeVariable = $validate['safeVariable'];
 
             $latestId = $workBo->createWork([
                 'workName' => $safeVariable['workName'],
@@ -40,7 +40,7 @@ class CreateController extends Controller
             if ($latestId > 0) {
                 $message = Constant::CREATE_SUCCESS;
                 $isSuccess = true;
-                $data = [
+                $dataInserted = [
                     'workId' => $latestId,
                     'workName' => $safeVariable['workName'],
                     'startDate' => $safeVariable['startDate'],
@@ -55,7 +55,7 @@ class CreateController extends Controller
         $json = json_encode([
             'result' => $isSuccess,
             'message' => $message,
-            'data' => $data
+            'data' => $dataInserted
         ]);
 
         return $response->withJson($json);

@@ -42,7 +42,7 @@ trait ValidaterFormTrait
 
         return [
             'isOk' => $isOk,
-            'safeVar' => $params,
+            'safeVariable' => $params,
             'message' => $message
         ];
     }

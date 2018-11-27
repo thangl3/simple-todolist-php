@@ -18,10 +18,7 @@ class HomeController extends Controller
      */
     public function index(Request $request, Response $response) : Response
     {
-        return $this->c->view->render(
-            $response,
-            'home.html.php'
-        );
+        return $this->c->view->render($response, 'home.html.php');
     }
 
     public function fetchWorks(Request $request, Response $response) : Response
