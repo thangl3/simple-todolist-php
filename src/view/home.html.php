@@ -22,15 +22,15 @@
                         </li>
                         <li class="nav-item">
                             <a :class="['nav-link', { active : visibility === 'today'}]"
-                                href="#today" v-on:click="today">Today</a>
+                                href="#today" v-on:click="today">Today <span class="badge badge-secondary">({{ currentDay }})</span></a>
                         </li>
                         <li class="nav-item">
                             <a :class="['nav-link', { active : visibility === 'week'}]"
-                                href="#week" v-on:click="week">Week</a>
+                                href="#week" v-on:click="week">Week <span class="badge badge-secondary">({{ currentWeek }})</span></a>
                         </li>
                         <li class="nav-item">
                             <a :class="['nav-link', { active : visibility === 'month'}]"
-                                href="#month" v-on:click="month">Month</a>
+                                href="#month" v-on:click="month">Month <span class="badge badge-secondary">({{ currentMonth }})</span></a>
                         </li>
                     </ul>
                 </section>
@@ -47,18 +47,18 @@
                         </select>
                     </div>
                 </section>
-                <section v-show="isShowWeek">
-                    <nav aria-label="Choose week" class="select-week flex mt-3">
-                        <button type="button" class="btn btn-info mr-3 disabled">Current week is: ({{ currentWeek }})</button>
-
+                <section v-show="isShowSelectWeek">
+                    <div class="input-group mt-3">
                         <select class="form-control select" v-model="selectWeek">
                             <option :value="selectWeek - (5 - n)" v-for="n in 5">
                                 {{ selectWeek - (5 - n) }}</option>
                             <option :value="selectWeek + n" v-for="n in 5">
                                 {{ selectWeek + n }}</option>
                         </select>
-                        
-                    </nav>
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" v-on:click="week">Filter</button>
+                        </div>
+                    </div>
                 </section>
                 <section class="works-panel">
                     <ul class="list px-0 mx-0" v-if="filteredWorks.length">

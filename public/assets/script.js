@@ -39,9 +39,13 @@ let todo = new Vue({
         allWork: [],
         statuses: [],
 
-        isShowWeek: false,
+        isShowSelectWeek: false,
         currentWeek: 0,
         selectWeek: 0,
+        currentMonth: 0,
+        selectMonth: 0,
+        currentYear: 0,
+        currentDay: 0,
 
         // filter `status` of work -> all, planing, doing and completed
         filter: 'all',
@@ -61,9 +65,11 @@ let todo = new Vue({
             },
             deep: true
         },
-        selectWeek(value) {
-            this.selectWeek = value
-            this.week()
+        // Watch show or hide select week on nav bar
+        visibility(value) {
+            this.isShowSelectWeek = (value === 'week')
+
+            return value
         }
     },
     computed: {
@@ -75,10 +81,11 @@ let todo = new Vue({
     },
     methods: {
         fetchWorks(url) {
+            console.log('fetch url', url)
             http.get(url).then(response => {
                 this.allWork = response.data.works
                 this.statuses = response.data.status
-            }).catch(error => {
+            }).catch(_ => {
                 this.notify(COMMON_ERROR, 'error')
             })
         },
@@ -233,9 +240,8 @@ let todo = new Vue({
             this.fetchWorks('/works-today?date=' + date)
         },
         week() {
-            let date = new Date()
             let week = this.selectWeek
-            let year = date.getWeekYear()
+            let year = this.currentYear
 
             if (week === 0) {
                 week = date.getWeek()
@@ -244,9 +250,8 @@ let todo = new Vue({
             this.fetchWorks(`/works-week?week=${week}&year=${year}`)
         },
         month() {
-            let date = new Date()
-            let month = date.getMonth() + 1
-            let year = date.getFullYear()
+            let month = this.selectMonth
+            let year = this.currentYear
 
             this.fetchWorks(`/works-month?month=${month}&year=${year}`)
         },
@@ -256,9 +261,16 @@ let todo = new Vue({
     },
     mounted() {
         console.log('mounted visibility is', this.visibility)
-        this.isShowWeek = this.visibility === 'week'
-        this.currentWeek = new Date().getWeek()
+        
+        let date = new Date()
+        this.currentWeek = date.getWeek()
+        this.currentMonth = date.getMonth() + 1
+        this.currentYear = date.getWeekYear()
+        this.currentDay = date.getDate() + '/' + this.currentMonth
+
         this.selectWeek = this.currentWeek
+        this.selectMonth = this.currentMonth
+
         this[this.visibility]()
     }
 })
@@ -273,6 +285,7 @@ function onHashChangeListener() {
         || hashFilter === 'week'
         || hashFilter === 'month') {
         todo.visibility = hashFilter
+        todo.isShowSelectWeek = (hashFilter === 'week')
     }
 }
 
