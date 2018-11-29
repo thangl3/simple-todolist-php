@@ -38,6 +38,22 @@ $container['view'] = function ($container) {
     return new Helper\View\ViewEngine($container->settings['viewPath']);
 };
 
+$container['notFoundHandler'] = function ($container) {
+    return function($error, $request, $response) {
+        $response->withStatus(404);
+        $response->setBody('Not found this route on the server, please make sure you enter right address!');
+        return $response;
+    };
+};
+
+$container['exceptionHandler'] = function ($container) {
+    return function($error, $request, $response) {
+        $response->withStatus(502);
+        $response->setBody('Have a problem on server, please try again later!');
+        return $response;
+    };
+};
+
 $route->get('/',                HomeController::class   .'@index');
 
 $route->group('/api', function () {
