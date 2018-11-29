@@ -34,7 +34,7 @@ class ViewEngine
         $extractOutputView = function () use ($fileView, $data) {
             extract($data);
 
-            ob_start();
+            ob_start('ob_gzhandler');
 
             include $fileView;
 
