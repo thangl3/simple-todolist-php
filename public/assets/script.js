@@ -1,4 +1,6 @@
-const COMMON_ERROR = 'Please try again or later'
+'use strict'
+
+const COMMON_ERROR = 'An error has occurred, please try again later'
 
 $.notify.defaults({
     style: 'bootstrap',
@@ -39,12 +41,17 @@ let todo = new Vue({
         allWork: [],
         statuses: [],
 
+        isShowSelectMonth: false,
         isShowSelectWeek: false,
         currentWeek: 0,
         selectWeek: 0,
+
         currentMonth: 0,
         selectMonth: 0,
+
         currentYear: 0,
+        selectYear: 0,
+
         currentDay: 0,
 
         // filter `status` of work -> all, planing, doing and completed
@@ -68,8 +75,25 @@ let todo = new Vue({
         // Watch show or hide select week on nav bar
         visibility(value) {
             this.isShowSelectWeek = (value === 'week')
+            this.isShowSelectMonth = (value === 'month')
 
             return value
+        },
+        selectWeek(newValue) {
+            let year = this.selectYear
+            let totalWeekOfYear = 0
+
+            // if leap year -> the year has 366 days
+            if (year % 4 === 0 && (year % 100 === 0 && year % 400 === 0)) {
+                totalWeekOfYear = Math.floor(366 / 7)
+            } else {
+                totalWeekOfYear = Math.floor(365 / 7)
+            }
+
+            if (newValue > totalWeekOfYear) {
+                this.selectWeek = 1
+                this.selectYear++
+            }
         }
     },
     computed: {
@@ -80,18 +104,28 @@ let todo = new Vue({
         }
     },
     methods: {
+        calculateDateOfWeek(week, year) {
+            // first day of week
+            let firstDateOfWeek = new Date(year, 0, (1 + (week - 1) * 7))
+            // calculate an average for the first day of week because a week starting from 0 to 6
+            firstDateOfWeek.setDate(firstDateOfWeek.getDate() - (firstDateOfWeek.getDay() + 6) % 7)
+
+            // last day of week
+            let lastDateOfWeek = new Date(year, 0, (1 + (week - 1) * 7))
+            // calculate an average for the last day of week because a week starting from 0 to 6
+            lastDateOfWeek.setDate(lastDateOfWeek.getDate() + 6 - (lastDateOfWeek.getDay() + 6) % 7)
+
+            return { firstDateOfWeek, lastDateOfWeek }
+        },
         fetchWorks(url) {
-            console.log('fetch url', url)
             http.get(url).then(response => {
                 this.allWork = response.data.works
                 this.statuses = response.data.status
             }).catch(_ => {
-                this.notify(COMMON_ERROR, 'error')
+                this.errorHandler()
             })
         },
         switchArea(e) {
-            console.log('switch')
-
             let viewElement = $(e.target).parents('.work').find('.view-area')
             let editElement = $(e.target).parents('.work').find('.edit-area')
 
@@ -125,20 +159,22 @@ let todo = new Vue({
 
             $(e.target).addClass('disabled')
 
-            let response = await http.put('/work', {
+            await http.put('/work', {
                 workId, workName,
                 startDate, endDate, status
-            }).catch(error => {
-                this.notify(COMMON_ERROR, 'error')
             })
-
-            if (response.data.result) {
-                this.allWork[this.allWork.indexOf(work)] = work
-                this.switchArea(e)
-                this.notify(response.data.message, 'success')
-            } else {
-                this.notify(response.data.message, 'error')
-            }
+            .then(response => {
+                if (response.data.result) {
+                    this.allWork[this.allWork.indexOf(work)] = work
+                    this.switchArea(e)
+                    this.notify(response.data.message, 'success')
+                } else {
+                    this.notify(response.data.message, 'error')
+                }
+            })
+            .catch(_ => {
+                this.errorHandler()
+            })
 
             $(e.target).removeClass('disabled')
         },
@@ -147,47 +183,51 @@ let todo = new Vue({
 
             let workId = work.workId
 
-            let response = await http.delete('/work', { params : { workId } })
-                .catch(error => {
-                    this.notify(COMMON_ERROR, 'error')
+            await http.delete('/work', { params : { workId } })
+                .then(response => {
+                    if (response.data.result) {
+                        this.allWork.splice(this.allWork.indexOf(work), 1)
+                        this.notify(response.data.message, 'success')
+                    } else {
+                        $.notify(response.data.message, 'error');
+                    }
                 })
-
-            if (response.data.result) {
-                this.allWork.splice(this.allWork.indexOf(work), 1)
-                this.notify(response.data.message, 'success')
-            } else {
-                $.notify(response.data.message, 'error');
-            }
+                .catch(_ => {
+                    this.errorHandler()
+                })
 
             $(e.target).removeClass('disabled')
         },
         async addWork(e) {
-            e.preventDefault();
             $(e.target).addClass('disabled')
+            e.preventDefault();
 
             if (this.workName === '') {
                 this.notify('Please enter the valid work\'s name', 'warn')
                 return false;
             }
 
-            let response = await http.post('/work', {
+            let work = {
                 workName: this.workName,
                 startDate: this.startDate,
                 endDate: this.endDate
-            })
-            .catch(_ => {
-                this.notify(COMMON_ERROR, 'error')
-            })
-
-            if (response.data.result) {
-                this.allWork.unshift(response.data.data)
-                this.workName = ''
-                this.startDate = null
-                this.endDate = null
-                this.notify(response.data.message, 'success')
-            } else {
-                this.notify(response.data.message, 'error')
             }
+
+            await http.post('/work', work)
+                .then(response => {
+                    if (response.data.result) {
+                        this.allWork.unshift(response.data.data)
+                        this.workName = ''
+                        this.startDate = null
+                        this.endDate = null
+                        this.notify(response.data.message, 'success')
+                    } else {
+                        this.notify(response.data.message, 'error')
+                    }
+                })
+                .catch(_ => {
+                    this.errorHandler()
+                })
 
             $(e.target).removeClass('disabled')
         },
@@ -225,44 +265,51 @@ let todo = new Vue({
                         this.notify(response.data.message, 'error')
                     }
                 })
-                .catch(error => {
+                .catch(_ => {
                     e.target.checked = false
                     workTarget.removeClass('completed')
-                    this.notify(COMMON_ERROR, 'error')
+                    this.errorHandler()
                 })
         },
         all() {
             this.fetchWorks('/works')
         },
         today() {
-            let date = new Date().getDateString()
+            let date = new Date().toDateString()
 
             this.fetchWorks('/works-today?date=' + date)
         },
         week() {
             let week = this.selectWeek
-            let year = this.currentYear
+            let year = this.selectYear
 
             if (week === 0) {
                 week = date.getWeek()
             }
 
+            // let dateOfWeek = this.calculateDateOfWeek(week, year)
+            // let startDate = dateOfWeek.firstDateOfWeek.toDateString()
+            // let endDate = dateOfWeek.lastDateOfWeek.toDateString()
+
             this.fetchWorks(`/works-week?week=${week}&year=${year}`)
         },
         month() {
             let month = this.selectMonth
-            let year = this.currentYear
+            let year = this.selectYear
 
             this.fetchWorks(`/works-month?month=${month}&year=${year}`)
         },
         notify(message, type) {
             $.notify(message, type);
+        },
+        errorHandler() {
+            this.allWork.length = 0
+            this.notify(COMMON_ERROR, 'error')
         }
     },
     mounted() {
-        console.log('mounted visibility is', this.visibility)
-        
         let date = new Date()
+
         this.currentWeek = date.getWeek()
         this.currentMonth = date.getMonth() + 1
         this.currentYear = date.getWeekYear()
@@ -270,6 +317,7 @@ let todo = new Vue({
 
         this.selectWeek = this.currentWeek
         this.selectMonth = this.currentMonth
+        this.selectYear = this.currentYear
 
         this[this.visibility]()
     }
@@ -278,14 +326,13 @@ let todo = new Vue({
 function onHashChangeListener() {
     let hashFilter = window.location.hash.replace(/\#?/, '')
 
-    console.log('hashFilter', hashFilter)
-
     if (hashFilter === 'all'
         || hashFilter === 'today'
         || hashFilter === 'week'
         || hashFilter === 'month') {
         todo.visibility = hashFilter
         todo.isShowSelectWeek = (hashFilter === 'week')
+        todo.isShowSelectMonth = (hashFilter === 'month')
     }
 }
 

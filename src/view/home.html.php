@@ -50,13 +50,36 @@
                 <section v-show="isShowSelectWeek">
                     <div class="input-group mt-3">
                         <select class="form-control select" v-model="selectWeek">
-                            <option :value="selectWeek - (5 - n)" v-for="n in 5">
-                                {{ selectWeek - (5 - n) }}</option>
-                            <option :value="selectWeek + n" v-for="n in 5">
+                            <option :value="selectWeek - (10 - n)" v-for="n in 10" v-if="(selectWeek - (10 - n)) > 0">
+                                {{ selectWeek - (10 - n) }}</option>
+                            <option :value="selectWeek + n" v-for="n in 10" v-if="(selectWeek + n) < 54">
                                 {{ selectWeek + n }}</option>
+                        </select>
+                        <select class="form-control select" v-model="selectYear">
+                            <option :value="selectYear - (3 - n)" v-for="n in 3">
+                                {{ selectYear - (3 - n) }}</option>
+                            <option :value="selectYear + n" v-for="n in 3">
+                                {{ selectYear + n }}</option>
                         </select>
                         <div class="input-group-append">
                             <button class="btn btn-outline-secondary" type="button" v-on:click="week">Filter</button>
+                        </div>
+                    </div>
+                </section>
+                <section v-show="isShowSelectMonth">
+                    <div class="input-group mt-3">
+                        <select class="form-control select" v-model="selectMonth">
+                            <option :value="n" v-for="n in 12">
+                                {{ n }}</option>
+                        </select>
+                        <select class="form-control select" v-model="selectYear">
+                            <option :value="selectYear - (3 - n)" v-for="n in 3">
+                                {{ selectYear - (3 - n) }}</option>
+                            <option :value="selectYear + n" v-for="n in 3">
+                                {{ selectYear + n }}</option>
+                        </select>
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" v-on:click="month">Filter</button>
                         </div>
                     </div>
                 </section>
@@ -134,7 +157,7 @@
                     <!-- Display message when empty work -->
                     <div class="mt-3" v-else>
                         <div class="alert alert-warning text-center" role="alert">
-                            No have records for you to do!
+                            No works for you to do!
                         </div>
                     </div>
                 </section>

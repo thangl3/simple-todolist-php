@@ -27,7 +27,7 @@ Date.prototype.getWeekYear = function() {
     return date.getFullYear();
 }
 
-Date.prototype.getDateString = function () {
+Date.prototype.toDateString = function () {
     let today = new Date(this.valueOf());
 
     let dd = today.getDate();

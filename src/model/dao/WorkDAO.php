@@ -50,15 +50,19 @@ class WorkDAO
         end_day, end_week, end_month, end_year, end_time, status, created_at
                 FROM work
                 WHERE
-                    start_week <= :week AND end_week >= :week
-                    AND
-                    start_year <= :year AND end_year >= :year';
+                    start_year = :year AND start_week <= :week AND end_week >= :week
+                    OR
+                    end_year = :year AND start_week <= :week AND end_week < 2
+                    OR
+                    start_year < :year AND end_year > :year
+                    OR
+                    end_year = :year AND start_year < :year AND end_week >= :week';
 
         return $this->mapper->fetchRows(
             $sql,
             [
-                'week' => $week,
-                'year' => $year
+                'year' => $year,
+                'week' => $week
             ]
         );
     }
@@ -69,9 +73,11 @@ class WorkDAO
         end_day, end_week, end_month, end_year, end_time, status, created_at
                 FROM work
                 WHERE
-                    start_month <= :month AND end_month >= :month
-                    AND
-                    start_year <= :year AND end_year >= :year';
+                    (start_year = :year AND start_month <= :month AND end_month >= :month)
+                    OR
+                    start_year < :year AND end_year > :year
+                    OR
+                    end_year = :year AND start_year < :year AND end_month >= :month';
 
         return $this->mapper->fetchRows(
             $sql,
