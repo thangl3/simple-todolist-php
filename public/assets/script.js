@@ -3,8 +3,7 @@
 const COMMON_ERROR = 'An error has occurred, please try again later'
 
 $.notify.defaults({
-    style: 'bootstrap',
-    position: 'top center',
+    globalPosition: 'top right',
     autoHideDelay: 5000,
     arrowSize: 200
 })
@@ -308,8 +307,8 @@ let todo = new Vue({
             $.notify(message, type);
         },
         errorHandler() {
-            this.allWork.length = 0
-            this.notify(COMMON_ERROR, 'error')
+            this.allWork = null
+            $.notify(COMMON_ERROR, 'error')
         }
     },
     mounted() {

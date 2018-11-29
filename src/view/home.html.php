@@ -84,7 +84,7 @@
                         </div>
                     </div>
                 </section>
-                <section class="works-panel">
+                <section class="works-panel" v-if="filteredWorks">
                     <ul class="list px-0 mx-0" v-if="filteredWorks.length">
                         <li v-for="work in filteredWorks"
                             :key="work.workId"
@@ -159,6 +159,13 @@
                     <div class="mt-3" v-else>
                         <div class="alert alert-warning text-center" role="alert">
                             No works for you to do!
+                        </div>
+                    </div>
+                </section>
+                <section v-else>
+                    <div class="mt-3">
+                        <div class="alert alert-warning text-center" role="alert">
+                            Sorry, can not display your works now!
                         </div>
                     </div>
                 </section>
