@@ -28,6 +28,8 @@ $ php -S localhost:8080 -t public index.php
 ## Testing
 
 Run this command for testing. Make sure you have data on database.
+Some case can not run by testing because I have updated method, controller and more function.
+In the future I will to do that.
 
 ```bash
 $ composer run test
