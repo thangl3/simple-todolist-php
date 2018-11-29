@@ -32,6 +32,11 @@ let filters = {
         return works.filter(work => {
             return work.status == 3
         })
+    },
+    notComplete(works) {
+        return works.filter(work => {
+            return work.status != 3
+        })
     }
 }
 

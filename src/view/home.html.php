@@ -41,6 +41,7 @@
                         </div>
                         <select class="custom-select" id="filterWorks" v-model="filter">
                             <option value="all">All</option>
+                            <option value="notComplete">Planing and Doing</option>
                             <option value="planing">PLaning</option>
                             <option value="doing">Doing</option>
                             <option value="completed">Completed</option>
