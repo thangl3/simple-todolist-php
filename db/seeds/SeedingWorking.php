@@ -24,7 +24,7 @@ class SeedingWorking extends AbstractSeed
                 'start_year' => '2018',
                 'start_time' => '11:55',
                 'end_day' => '06',
-                'end_week' => 36
+                'end_week' => 36,
                 'end_month' => '07',
                 'end_year' => '2019',
                 'end_time' => '12:35',
@@ -38,7 +38,7 @@ class SeedingWorking extends AbstractSeed
                 'start_year' => '2019',
                 'start_time' => '11:55',
                 'end_day' => '06',
-                'end_week' => 36
+                'end_week' => 36,
                 'end_month' => '07',
                 'end_year' => '2020',
                 'end_time' => '12:35',
@@ -52,7 +52,7 @@ class SeedingWorking extends AbstractSeed
                 'start_year' => '2019',
                 'start_time' => '11:55',
                 'end_day' => '06',
-                'end_week' => 36
+                'end_week' => 36,
                 'end_month' => '07',
                 'end_year' => '2020',
                 'end_time' => '12:35',
@@ -66,7 +66,7 @@ class SeedingWorking extends AbstractSeed
                 'start_year' => '2016',
                 'start_time' => null,
                 'end_day' => '06',
-                'end_week' => 36
+                'end_week' => 36,
                 'end_month' => '07',
                 'end_year' => '2020',
                 'end_time' => null,

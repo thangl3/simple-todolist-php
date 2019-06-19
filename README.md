@@ -1,5 +1,5 @@
 # simple-todolist-php
-A simple to do list made with PHP language.
+A simple to-do-list made with pure PHP and Vuejs.
 It already for running on server and testing.
 
 ## Usage
